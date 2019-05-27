@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    tools:context=".ProfileBookmarkFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/image_profileBookmarkFragment"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/image_profilecontentfragment"
+        android:src="@drawable/baseline_favorite_white_36dp" />
+
+    <TextView
+        android:id="@+id/content1_profileBookmarkFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/content1_profileBookmarkFragment"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/content2_profileBookmarkFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/content2_profileBookmarkFragment"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/content3_profileBookmarkFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/content3_profileBookmarkFragment"
+        android:textSize="16sp" />
+
+</LinearLayout>
