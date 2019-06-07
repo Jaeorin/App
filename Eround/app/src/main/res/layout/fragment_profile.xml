@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    tools:context=".Fragment.Profile.Profile">
 
     <FrameLayout
         android:id="@+id/backGround_profileFragment"
@@ -31,24 +31,13 @@
             android:layout_weight="70"
             android:background="#FF8D8D"
             android:baselineAligned="false"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/headerName_profileFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:text="@string/me"
-                android:textColor="#B3FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:visibility="visible" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="66dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -96,7 +85,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/content_mainFragment"
+            android:id="@+id/content_profileFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="30"

@@ -60,4 +60,11 @@
     <string name="tag3Content1_hashFragment">#너에게궁금한</string>
     <string name="tag3Content2_hashFragment">이야기 75</string>
     <string name="tag3Content3_hashFragment">구독자 12</string>
+    <string name="headerSaveButton_writeFragment">저장</string>
+    <string name="navigation_open">오픈</string>
+    <string name="navigation_close">클로스</string>
+    <string name="dot_hashFragment">·</string>
+    <string name="alarmHeaderName_activity">알림</string>
+    <string name="writeHeaderSave">저장</string>
+    <string name="hashHeaderSearch_activity">검색어를 입력하세요.</string>
 </resources>

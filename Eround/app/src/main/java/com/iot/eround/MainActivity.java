@@ -1,24 +1,44 @@
 package com.iot.eround;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.iot.eround.Adapter.MenuAdapter;
+import com.iot.eround.Fragment.Alarm.Alarm;
+import com.iot.eround.Fragment.Hash.Hash;
+import com.iot.eround.Fragment.Main.Main;
+import com.iot.eround.Fragment.Profile.Profile;
+import com.iot.eround.Fragment.Story.Story;
+import com.iot.eround.Fragment.Write.Write;
 import com.iot.eround.Util.ApiService;
-import com.iot.eround.VO.Content;
+import com.iot.eround.Util.ImageRoader;
+import com.iot.eround.Util.RetroCallback;
+import com.iot.eround.VO.Board;
+import com.iot.eround.VO.Feeling;
+import com.iot.eround.VO.Region;
+import com.iot.eround.VO.Users;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,42 +47,166 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    Fragment mainFragment = new MainFragment();
-    Fragment hashFragment = new HashFragment();
-    Fragment writeFragment = new WriteFragment();
-    Fragment alarmFragment = new AlarmFragment();
-    Fragment profileFragment = new ProfileFragment();
+    LinearLayout header_activity = findViewById(R.id.header_activity);
+    LinearLayout hashHeader_activity = findViewById(R.id.hashHeader_activity);
+    LinearLayout writeHeader_activity = findViewById(R.id.writeHeader_activity);
+    LinearLayout alarmHeader_activity = findViewById(R.id.alarmHeader_activity);
+    LinearLayout writeFooter_activity = findViewById(R.id.writeFooter_activity);
+    Button headerMenuButton = findViewById(R.id.headerMenu_activity);
+    Button headerCancleButton = findViewById(R.id.headerCancle_activity);
+    Button headerMoreButton = findViewById(R.id.headerMore_activity);
+    TextView headerText = findViewById(R.id.headerName_activity);
 
-    // 레트로핏에 필요한 객체 생성
-    Retrofit retrofit;
-    ApiService apiService;
-    Gson gson = new Gson();
+    public Fragment mainFragment = new Main();
+    public Fragment hashFragment = new Hash();
+    public Fragment writeFragment = new Write();
+    public Fragment alarmFragment = new Alarm();
+    public Fragment profileFragment = new Profile();
+    public Fragment storyFragment = new Story();
+    public Retrofit retrofit;
+    public ApiService apiService;
 
-    // 메인화면 랜덤 배경 전환에 필요한 변수들
-    int[] randomNumberArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    Random random = new Random();
-    int randomNumber = random.nextInt(randomNumberArray.length);
+    public Random random = new Random();
+    public ImageRoader imageRoader = new ImageRoader();
+    public List<Integer> boardRandomNumberArray = new ArrayList<>();
+    public int[] defaultRandomNumberArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    public int boardRandomNumber;
+    public String url;
+
+    DrawerLayout drawer;
+
+    ExpandableListView expandableListView;
+    private ArrayList<String> arrayGroup = new ArrayList<>();
+    private HashMap<String, ArrayList<String>> arrayChild = new HashMap<>();
+
+    private long pressedTime;
+
+    TextView writeHeaderSave;
+
+    Context mContext;
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
+        setContext(this);
+
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         getSupportFragmentManager().beginTransaction().add(R.id.mainFrag_activity, mainFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.hashFrag_activity, hashFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.writeFrag_activity, writeFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.alarmFrag_activity, alarmFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.profileFrag_activity, profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.storyFrag_activity, storyFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+        hashHeader_activity.setVisibility(View.GONE);
+        writeHeader_activity.setVisibility(View.GONE);
+        alarmHeader_activity.setVisibility(View.GONE);
+        writeFooter_activity.setVisibility(View.GONE);
+
+        drawer = findViewById(R.id.container);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+
+        expandableListView = this.findViewById(R.id.expandableListView_activity);
+        setArrayData();
+        expandableListView.setAdapter(new MenuAdapter(this, arrayGroup, arrayChild));
+        expandableListView.expandGroup(0);
+        expandableListView.expandGroup(1);
+        expandableListView.expandGroup(2);
+        expandableListView.expandGroup(3);
+
+        expandableListView.setOnGroupClickListener((arg0, itemView, itemPosition, itemId) -> {
+            if(itemPosition == 1 || itemPosition == 2 ) {
+                if(!expandableListView.isGroupExpanded(itemPosition)) {
+                    expandableListView.expandGroup(itemPosition);
+                }else{
+                    expandableListView.collapseGroup(itemPosition);
+                }
+            }
+            return true;
+        });
+
+        expandableListView.setOnChildClickListener((expandableListView, view, groupPosition, childPosition, id) -> {
+            switch (groupPosition) {
+                case 1:
+                    switch (childPosition) {
+                        case 1:
+                            storyFragShow();
+                            break;
+                        case 2:
+                            storyFragShow();
+                            break;
+                        case 3:
+                            storyFragShow();
+                            break;
+                        case 4:
+                            storyFragShow();
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (childPosition) {
+                        case 1:
+                            storyFragShow();
+                            break;
+                        case 2:
+                            storyFragShow();
+                            break;
+                        case 3:
+                            storyFragShow();
+                            break;
+                        case 4:
+                            storyFragShow();
+                            break;
+                        case 5:
+                            storyFragShow();
+                            break;
+                        case 6:
+                            storyFragShow();
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (childPosition) {
+                        case 1:
+                            storyFragShow();
+                            break;
+                    }
+                    break;
+                case 4:
+                    switch (childPosition) {
+                        case 1:
+                            storyFragShow();
+                            break;
+                        case 2:
+                            storyFragShow();
+                            break;
+                        case 3:
+                            storyFragShow();
+                            break;
+                    }
+                    break;
+            }
+            return true;
+        });
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(ApiService.URL)
@@ -70,113 +214,353 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         apiService = retrofit.create(ApiService.class);
 
-        Call<ResponseBody> mainBackgroundImage = apiService.mainBackgroundImage("image", randomNumber + ".jpg");
+        Call<List<Board>> boardFindall = apiService.boardFindall();
 
-        mainBackgroundImage.enqueue(new Callback<ResponseBody>() {
+        boardFindall.enqueue(new Callback<List<Board>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
+            public void onResponse(Call<List<Board>> call, Response<List<Board>> response) {
 
-                    Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                List<Board> responsebody = response.body();
 
-                    MainFragment backGroundImage_mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.backGroundImage_mainFragment);
-                    backGroundImage_mainFragment.changeFragmentImageView(bitmap);
+                for(int i = 0; responsebody.size() > i; i++){
+                    boardRandomNumberArray.add(responsebody.get(i).getBoardNum());
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-            }
-        });
-
-        Call<ResponseBody> content = apiService.content("board", "findby", 1);
-
-        content.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-                    String json = response.body().string();
-                    Content VO = gson.fromJson(json, Content.class);
-
-                    MainFragment content_mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_mainFragment);
-                    content_mainFragment.changeFragmentTextView(VO.getBoardContent());
-                    MainFragment location_mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.location_mainFragment);
-                    location_mainFragment.changeFragmentTextView(VO.getBoardRegion().getRegionName());
-                    MainFragment time_mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.time_mainFragment);
-                    time_mainFragment.changeFragmentTextView(VO.getBoardCreateDate());
-                    MainFragment emotion_mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.emotion_mainFragment);
-                    emotion_mainFragment.changeFragmentTextView(VO.getFeeling().getFeelingEmoticon());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
 
+                boardRandomNumber = boardRandomNumberArray.get(random.nextInt(responsebody.size()));
+
+                Call<Board> mainContent = apiService.boardFindby(boardRandomNumber);
+
+                mainContent.enqueue(new Callback<Board>() {
+                    @Override
+                    public void onResponse(Call<Board> call, Response<Board> response) {
+
+                        Board board = Translate(response.body());
+
+                        if(board.getAttachFile().size() == 0) {
+
+                            url = ApiService.URL + "/image/" + (random.nextInt(defaultRandomNumberArray.length) + 1) + ".jpg";
+
+                        } else {
+
+                            url = ApiService.URL + board.getAttachFile().get(1).getFilePath();
+
+                        }
+
+                        try {
+
+                            ImageView backGroundImage_mainFragment = mainFragment.getView().findViewById(R.id.backGroundImage_mainFragment);
+                            backGroundImage_mainFragment.setImageBitmap(imageRoader.getBitmapImg(url));
+
+                            TextView contentText_mainFragment = mainFragment.getView().findViewById(R.id.contentText_mainFragment);
+                            contentText_mainFragment.setText(board.getBoardContent());
+
+                            TextView location_mainFragment = mainFragment.getView().findViewById(R.id.location_mainFragment);
+                            location_mainFragment.setText(board.getBoardRegion().toString());
+
+                            TextView time_mainFragment = mainFragment.getView().findViewById(R.id.time_mainFragment);
+                            time_mainFragment.setText(board.getBoardCreateDate());
+
+                            if (board.getFeeling().getFeelingNum() == 0) {
+                                TextView emotion_mainFragment = mainFragment.getView().findViewById(R.id.emotion_mainFragment);
+                                emotion_mainFragment.setVisibility(View.INVISIBLE);
+                            } else {
+                                TextView emotion_mainFragment = mainFragment.getView().findViewById(R.id.emotion_mainFragment);
+                                emotion_mainFragment.setText(board.getFeeling().getFeelingEmoticon());
+                            }
+
+                            TextView favorite_mainFragment = mainFragment.getView().findViewById(R.id.favorite_mainFragment);
+                            favorite_mainFragment.setText(String.valueOf(board.getReply().size()));
+
+                            TextView comment_mainFragment = mainFragment.getView().findViewById(R.id.comment_mainFragment);
+                            comment_mainFragment.setText(String.valueOf(board.getHeart().size()));
+
+
+
+                        } catch (Exception e) {
+
+                            Log.i("test5 Exception e", e.toString());
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Board> call, Throwable t) {
+
+                        Log.i("test1 onFailure", t.toString());
+
+                    }
+                });
+
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<List<Board>> call, Throwable t) {
+
+                Log.i("test2 onFailure", t.toString());
+
             }
         });
 
         Button locationButton_activity = findViewById(R.id.locationButton_activity);
         locationButton_activity.setOnClickListener(view -> {
-            getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-            LinearLayout footer_activity = findViewById(R.id.footer_activity);
-            footer_activity.setBackgroundColor(Color.argb(0,0,0,0));
+            mainFragShow();
         });
 
         Button compassButton_activity = findViewById(R.id.compassButton_activity);
         compassButton_activity.setOnClickListener(view -> {
-            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-            getSupportFragmentManager().beginTransaction().show(hashFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-            LinearLayout footer_activity = findViewById(R.id.footer_activity);
-            footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+            hashFragShow();
         });
 
         Button writeButton_activity = findViewById(R.id.writeButton_activity);
         writeButton_activity.setOnClickListener(view -> {
-            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-            getSupportFragmentManager().beginTransaction().show(writeFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-            LinearLayout footer_activity = findViewById(R.id.footer_activity);
-            footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+            writeFragShow();
         });
 
         Button alarmButton_activity = findViewById(R.id.alarmButton_activity);
         alarmButton_activity.setOnClickListener(view -> {
-            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-            getSupportFragmentManager().beginTransaction().show(alarmFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-            LinearLayout footer_activity = findViewById(R.id.footer_activity);
-            footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+            alarmFragShow();
         });
 
         Button profileButton_activity = findViewById(R.id.profileButton_activity);
         profileButton_activity.setOnClickListener(view -> {
-            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-            getSupportFragmentManager().beginTransaction().show(profileFragment).commit();
-            LinearLayout footer_activity = findViewById(R.id.footer_activity);
-            footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+            profileFragShow();
+        });
+
+        Button writeHeaderCancle = findViewById(R.id.writeHeaderCancle);
+        writeHeaderCancle.setOnClickListener(view -> {
+            mainFragShow();
+        });
+
+        writeHeaderSave = findViewById(R.id.writeHeaderSave);
+        writeHeaderSave.setOnClickListener(view -> {
+
+            EditText editText_writeFragment = writeFragment.getView().findViewById(R.id.editText_writeFragment);
+            String text = editText_writeFragment.getText().toString();
+
+            Board board = new Board();
+            Users user = new Users();
+            user.setUserNum(1);
+
+            board.setBoardContent(text);
+            board.setUser(user);
+            board.setBoardRegion(Region.전국);
+
+            postFirst(board, new RetroCallback() {
+                @Override
+                public void onError(Throwable t) {
+                    Log.i("test onError", t.toString());
+                }
+                @Override
+                public void onSuccess(int code, Object receivedData) {
+                    Board data = (Board) receivedData;
+                    Log.i("test onSuccess codeResultTextView", String.valueOf(code));
+                    Log.i("test onSuccess idResultTextView", String.valueOf(data.getBoardNum()));
+                    Log.i("test onSuccess titleResultTextView", data.getBoardContent());
+                    Log.i("test onSuccess useridResultTextView", String.valueOf(data.getBoardRegion()));
+                    Log.i("test onSuccess bodyResultTextView", String.valueOf(data.getUser().getUserNum()));
+
+                }
+                @Override
+                public void onFailure(int code) {
+                    Log.i("test onFailure", String.valueOf(code));
+                }
+            });
+
+            mainFragShow();
+
         });
 
 
+        Button headerMenu_activity = findViewById(R.id.headerMenu_activity);
+        headerMenu_activity.setOnClickListener(view -> drawer.openDrawer(Gravity.LEFT));
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if ( pressedTime == 0 ) {
+            Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
+            pressedTime = System.currentTimeMillis();
+        }
+        else {
+            int seconds = (int) (System.currentTimeMillis() - pressedTime);
+
+            if (seconds > 2000) {
+                Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다.", Toast.LENGTH_LONG).show();
+                pressedTime = 0;
+            } else {
+                super.onBackPressed();
+            }
+        }
+    }
+
+    private void setArrayData(){
+
+        arrayGroup.add("일반");
+        arrayGroup.add("추천 보기");
+        arrayGroup.add("구독 중인 태그");
+        arrayGroup.add("부가 기능");
+
+        ArrayList<String> arrayTest1 = new ArrayList<>();
+        arrayTest1.add("시작하는 이야기");
+        arrayTest1.add("많이 공유된 이야기");
+        arrayTest1.add("더 공감 받는 이야기");
+        arrayTest1.add("거리가 가까운 이야기");
+
+        ArrayList<String> arrayTest2 = new ArrayList<>();
+        arrayTest2.add("오늘내마음을읽었습니다");
+        arrayTest2.add("달콤전시회");
+        arrayTest2.add("안유명해도좋아");
+        arrayTest2.add("음성일기");
+        arrayTest2.add("고민상담");
+        arrayTest2.add("나를바꾼한마디");
+
+        ArrayList<String> arrayTest3 = new ArrayList<>();
+        arrayTest3.add("한뉘용하쉐열");
+
+        ArrayList<String> arrayTest4 = new ArrayList<>();
+        arrayTest4.add("탐색 환경 설정");
+        arrayTest4.add("설정");
+        arrayTest4.add("도움말과 의견 보내기");
+
+        arrayChild.put(arrayGroup.get(0), arrayTest1);
+        arrayChild.put(arrayGroup.get(1), arrayTest2);
+        arrayChild.put(arrayGroup.get(2), arrayTest3);
+        arrayChild.put(arrayGroup.get(3), arrayTest4);
+
+    }
+
+    public Board Translate(Board board) {
+
+        Optional<Board> optionalBoard = Optional.of(board);
+
+        Feeling feeling = new Feeling(0, "", "", null, null, null);
+
+        board.setFeeling(optionalBoard.map(Board::getFeeling).orElse(feeling));
+
+        return board;
+    }
+
+    public void postFirst(Board board, final RetroCallback callback) {
+        apiService.boardSave(board).enqueue(new Callback<Board>() {
+            @Override
+            public void onResponse(Call<Board> call, Response<Board> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Board> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void mainFragShow(){
+        getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+        LinearLayout footer_activity = findViewById(R.id.footer_activity);
+        footer_activity.setBackgroundColor(Color.argb(0,0,0,0));
+        header_activity.setVisibility(View.VISIBLE);
+        hashHeader_activity.setVisibility(View.GONE);
+        writeHeader_activity.setVisibility(View.GONE);
+        alarmHeader_activity.setVisibility(View.GONE);
+        writeFooter_activity.setVisibility(View.GONE);
+        headerMenuButton.setVisibility(View.VISIBLE);
+        headerCancleButton.setVisibility(View.INVISIBLE);
+        headerMoreButton.setVisibility(View.INVISIBLE);
+        headerText.setText("AROUND");
+    }
+
+    public void hashFragShow(){
+        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+        LinearLayout footer_activity = findViewById(R.id.footer_activity);
+        footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+        header_activity.setVisibility(View.GONE);
+        hashHeader_activity.setVisibility(View.VISIBLE);
+        writeHeader_activity.setVisibility(View.GONE);
+        alarmHeader_activity.setVisibility(View.GONE);
+        writeFooter_activity.setVisibility(View.GONE);
+    }
+
+    public void writeFragShow(){
+        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+        LinearLayout footer_activity = findViewById(R.id.footer_activity);
+        footer_activity.setVisibility(View.GONE);
+        header_activity.setVisibility(View.GONE);
+        hashHeader_activity.setVisibility(View.GONE);
+        writeHeader_activity.setVisibility(View.VISIBLE);
+        alarmHeader_activity.setVisibility(View.GONE);
+        writeFooter_activity.setVisibility(View.VISIBLE);
+        url = ApiService.URL + "/image/" + (random.nextInt(defaultRandomNumberArray.length) + 1) + ".jpg";
+        Log.i("test image", url);
+        ImageView backGroundImage_writeFragment = writeFragment.getView().findViewById(R.id.backGroundImage_writeFragment);
+        backGroundImage_writeFragment.setImageBitmap(imageRoader.getBitmapImg(url));
+    }
+
+    public void alarmFragShow(){
+
+        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+        LinearLayout footer_activity = findViewById(R.id.footer_activity);
+        footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+        header_activity.setVisibility(View.GONE);
+        hashHeader_activity.setVisibility(View.GONE);
+        writeHeader_activity.setVisibility(View.GONE);
+        alarmHeader_activity.setVisibility(View.VISIBLE);
+        writeFooter_activity.setVisibility(View.GONE);
+
+    }
+
+    public void profileFragShow(){
+        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+        LinearLayout footer_activity = findViewById(R.id.footer_activity);
+        footer_activity.setBackgroundColor(Color.rgb(0,0,0));
+        header_activity.setVisibility(View.VISIBLE);
+        hashHeader_activity.setVisibility(View.GONE);
+        writeHeader_activity.setVisibility(View.GONE);
+        alarmHeader_activity.setVisibility(View.GONE);
+        writeFooter_activity.setVisibility(View.GONE);
+        headerMenuButton.setVisibility(View.INVISIBLE);
+        headerCancleButton.setVisibility(View.INVISIBLE);
+        headerMoreButton.setVisibility(View.INVISIBLE);
+        headerText.setText("ME");
+    }
+
+    public void storyFragShow(){
+        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(storyFragment).commit();
     }
 
 }

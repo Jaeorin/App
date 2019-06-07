@@ -6,31 +6,12 @@
     android:layout_height="match_parent"
     android:background="#66000000"
     android:orientation="vertical"
-    tools:context=".HashFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="#FFFFFF"
-        android:orientation="vertical">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/search_hashFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="hint" />
-        </android.support.design.widget.TextInputLayout>
-
-    </LinearLayout>
+    tools:context=".Fragment.Hash.Hash">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="66dp"
         android:background="#E0E0E0"
         android:orientation="vertical"
         android:padding="10dp">
@@ -82,7 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text=" · "
+                        android:text="@string/dot_hashFragment"
                         android:textColor="#FFFFFF" />
 
                     <TextView
@@ -145,7 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text=" · "
+                        android:text="@string/dot_hashFragment"
                         android:textColor="#FFFFFF" />
 
                     <TextView
@@ -208,7 +189,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text=" · "
+                        android:text="@string/dot_hashFragment"
                         android:textColor="#FFFFFF" />
 
                     <TextView

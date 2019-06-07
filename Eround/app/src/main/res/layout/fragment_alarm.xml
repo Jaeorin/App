@@ -6,26 +6,7 @@
     android:layout_height="match_parent"
     android:background="#66000000"
     android:orientation="vertical"
-    tools:context=".AlarmFragment">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button" />
-
-    </FrameLayout>
+    tools:context=".Fragment.Alarm.Alarm">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,6 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="66dp"
             android:orientation="horizontal">
 
             <ImageView
