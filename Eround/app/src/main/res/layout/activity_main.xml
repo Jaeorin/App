@@ -14,27 +14,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <fragment
+            android:name="com.iot.eround.Fragment.Main.Main"
             android:id="@+id/mainFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <FrameLayout
+        <fragment
+            android:name="com.iot.eround.Fragment.Hash.Hash"
             android:id="@+id/hashFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <FrameLayout
+        <fragment
+            android:name="com.iot.eround.Fragment.Write.Write"
             android:id="@+id/writeFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <FrameLayout
+        <fragment
+            android:name="com.iot.eround.Fragment.Alarm.Alarm"
             android:id="@+id/alarmFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <FrameLayout
+        <fragment
+            android:name="com.iot.eround.Fragment.Profile.Profile"
             android:id="@+id/profileFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -47,7 +52,7 @@
         <FrameLayout
             android:id="@+id/storyFrag_activity"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <FrameLayout
             android:layout_width="match_parent"

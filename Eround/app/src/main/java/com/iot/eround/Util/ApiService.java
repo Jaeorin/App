@@ -34,10 +34,9 @@ public interface ApiService {
     @POST("/attach/update")
     Call<AttachFile> attachUpdate(@Body AttachFile AttachFile);
 
-
-    // setBoardContent
-    // setUser
-    // setBoardRegion
+    // String setBoardContent
+    // int setUser
+    // String setBoardRegion
     @POST("/board/save")
     Call<Board> boardSave(@Body Board board);
 
@@ -53,12 +52,10 @@ public interface ApiService {
     @POST("/board/delete/{path1}")
     Call<Board> boardDelete(@Path("path1") int path1);
 
-
-
+    // int boardNum
+    // int userNum
     @POST("/bookmark/save")
-    Call<BookMark> bookmarkSave(
-            @Query("boardNum") int boardNum,
-            @Query("userNum") int userNum);
+    Call<BookMark> bookmarkSave(@Body BookMark bookMark);
 
     @GET("/bookmark/findall")
     Call<List<BookMark>> bookmarkFindall();
@@ -67,19 +64,15 @@ public interface ApiService {
     Call<BookMark> bookmarkFindby(@Path("path1") int path1);
 
     @POST("/bookmark/update")
-    Call<BookMark> bookmarkUpdate(
-            @Query("boardNum") int boardNum,
-            @Query("userNum") int userNum);
+    Call<BookMark> bookmarkUpdate(@Body BookMark bookMark);
 
     @POST("/bookmark/delete/{path1}")
     Call<BookMark> bookmarkDelete(@Path("path1") int path1);
 
-
-
+    // String feelingName
+    // String feelingEmoticon
     @POST("/feeling/save")
-    Call<Feeling> feelingSave(
-            @Query("feelingName") String feelingName,
-            @Query("feelingEmoticon") String feelingEmoticon);
+    Call<Feeling> feelingSave(@Body Feeling feeling);
 
     @GET("/feeling/findall")
     Call<List<Feeling>> feelingFindall();
@@ -88,20 +81,16 @@ public interface ApiService {
     Call<Feeling> feelingFindby(@Path("path1") int path1);
 
     @POST("/feeling/update")
-    Call<Feeling> feelingUpdate(
-            @Query("feelingName") String feelingName,
-            @Query("feelingEmoticon") String feelingEmoticon);
+    Call<Feeling> feelingUpdate(@Body Feeling feeling);
 
     @POST("/feeling/delete/{path1}")
     Call<Feeling> feelingDelete(@Path("path1") int path1);
 
-
-
+    // int userNum
+    // int BoardNum
+    // int heartStatus
     @POST("/heart/save")
-    Call<Heart> heartSave(
-            @Query("userNum") int userNum,
-            @Query("boardNum") int boardNum,
-            @Query("heartStatus") int heartStatus);
+    Call<Heart> heartSave(@Body Heart heart);
 
     @GET("/heart/findall")
     Call<List<Heart>> heartFindall();
@@ -110,16 +99,12 @@ public interface ApiService {
     Call<Heart> heartFindby(@Path("path1") int path1);
 
     @POST("/heart/update")
-    Call<Heart> heartUpdate(
-            @Query("userNum") int userNum,
-            @Query("boardNum") int boardNum,
-            @Query("heartStatus") int heartStatus);
+    Call<Heart> heartUpdate(@Body Heart heart);
 
     @POST("/heart/delete/{path1}")
     Call<Heart> heartDelete(@Path("path1") int path1);
 
-
-
+    //
     @POST("/inserttag/save")
     Call<InsertTag> inserttagSave();
 
@@ -135,14 +120,12 @@ public interface ApiService {
     @POST("/inserttag/delete/{path1}")
     Call<InsertTag> inserttagDelete(@Path("path1") int path1);
 
-
-
+    // String replyContent
+    // int replyStatus
+    // int boardNum
+    // int userNum
     @POST("/reply/save")
-    Call<Reply> replySave(
-            @Query("replyContent") String replyContent,
-            @Query("replyStatus") int replyStatus,
-            @Query("boardNum") int boardNum,
-            @Query("userNum") int userNum);
+    Call<Reply> replySave(@Body Reply reply);
 
     @GET("/reply/findall")
     Call<List<Reply>> replyFindall();
@@ -151,21 +134,15 @@ public interface ApiService {
     Call<Reply> replyFindby(@Path("path1") int path1);
 
     @POST("/reply/update")
-    Call<Reply> replyUpdate(
-            @Query("replyContent") String replyContent,
-            @Query("replyStatus") int replyStatus,
-            @Query("boardNum") int boardNum,
-            @Query("userNum") int userNum);
+    Call<Reply> replyUpdate(@Body Reply reply);
 
     @POST("/reply/delete/{path1}")
     Call<Reply> replyDelete(@Path("path1") int path1);
 
-
-
+    // int tagNum
+    // int userNum
     @POST("/subscribe/save")
-    Call<Subscribe> subscribeSave(
-            @Query("tagNum") int tagNum,
-            @Query("userNum") int userNum);
+    Call<Subscribe> subscribeSave(@Body Subscribe subscribe);
 
     @GET("/subscribe/findall")
     Call<List<Subscribe>> subscribeFindall();
@@ -174,18 +151,14 @@ public interface ApiService {
     Call<Subscribe> subscribeFindby(@Path("path1") int path1);
 
     @POST("/subscribe/update")
-    Call<Subscribe> subscribeUpdate(
-            @Query("tagNum") int tagNum,
-            @Query("userNum") int userNum);
+    Call<Subscribe> subscribeUpdate(@Body Subscribe subscribe);
 
     @POST("/subscribe/delete/{path1}")
     Call<Subscribe> subscribeDelete(@Path("path1") int path1);
 
-
-
+    // String tagName
     @POST("/tags/save")
-    Call<Tags> tagsSave(
-            @Query("tagName") String tagName);
+    Call<Tags> tagsSave(@Body Tags tags);
 
     @GET("/tags/findall")
     Call<List<Tags>> tagsFindall();
@@ -194,23 +167,20 @@ public interface ApiService {
     Call<Tags> tagsFindby(@Path("path1") int path1);
 
     @POST("/tags/update")
-    Call<Tags> tagsUpdate(
-            @Query("tagName") String tagName);
+    Call<Tags> tagsUpdate(@Body Tags tags);
 
     @POST("/tags/delete/{path1}")
     Call<Tags> tagsDelete(@Path("path1") int path1);
 
-
-
+    // int userAge
+    // String userGender
+    // String userSearchRegion
+    // String userRegion
+    // int userEmail
+    // int userSearchMinAge
+    // int userSearchMaxAge
     @POST("/users/save")
-    Call<Users> usersSave(
-            @Query("userAge") int userAge,
-            @Query("userGender") String userGender,
-            @Query("userSearchRegion") String userSearchRegion,
-            @Query("userRegion") String userRegion,
-            @Query("userEmail") String userEmail,
-            @Query("userSearchMinAge") int userSearchMinAge,
-            @Query("userSearchMaxAge") int userSearchMaxAge);
+    Call<Users> usersSave(@Body Users users);
 
     @GET("/users/findall")
     Call<List<Users>> usersFindall();
@@ -219,14 +189,7 @@ public interface ApiService {
     Call<Users> usersFindby(@Path("path1") int path1);
 
     @POST("/users/update")
-    Call<Users> usersUpdate(
-            @Query("userAge") int userAge,
-            @Query("userGender") String userGender,
-            @Query("userSearchRegion") String userSearchRegion,
-            @Query("userRegion") String userRegion,
-            @Query("userEmail") String userEmail,
-            @Query("userSearchMinAge") int userSearchMinAge,
-            @Query("userSearchMaxAge") int userSearchMaxAge);
+    Call<Users> usersUpdate(@Body Users users);
 
     @POST("/users/delete/{path1}")
     Call<Users> usersDelete(@Path("path1") int path1);
