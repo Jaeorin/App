@@ -14,32 +14,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment
-            android:name="com.iot.eround.Fragment.Main.Main"
+        <FrameLayout
             android:id="@+id/mainFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment
-            android:name="com.iot.eround.Fragment.Hash.Hash"
+        <FrameLayout
             android:id="@+id/hashFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment
-            android:name="com.iot.eround.Fragment.Write.Write"
+        <FrameLayout
             android:id="@+id/writeFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment
-            android:name="com.iot.eround.Fragment.Alarm.Alarm"
+        <FrameLayout
             android:id="@+id/alarmFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment
-            android:name="com.iot.eround.Fragment.Profile.Profile"
+        <FrameLayout
             android:id="@+id/profileFrag_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

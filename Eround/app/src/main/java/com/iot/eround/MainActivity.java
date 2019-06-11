@@ -15,11 +15,9 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.iot.eround.Adapter.ListAdapter;
 import com.iot.eround.Adapter.MenuAdapter;
 import com.iot.eround.Fragment.Alarm.Alarm;
 import com.iot.eround.Fragment.Hash.Hash;
@@ -32,7 +30,6 @@ import com.iot.eround.Util.ImageRoader;
 import com.iot.eround.Util.RetroCallback;
 import com.iot.eround.VO.Board;
 import com.iot.eround.VO.Feeling;
-import com.iot.eround.VO.InsertTag;
 import com.iot.eround.VO.Region;
 import com.iot.eround.VO.Subscribe;
 import com.iot.eround.VO.Tags;
@@ -83,10 +80,6 @@ public class MainActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
     private ArrayList<String> arrayGroup = new ArrayList<>();
     private HashMap<String, ArrayList<String>> arrayChild = new HashMap<>();
-
-    ListView listView;
-    ListAdapter adapter;
-
 
     private long pressedTime;
 
@@ -145,18 +138,6 @@ public class MainActivity extends AppCompatActivity {
         writeHeader_activity.setVisibility(View.GONE);
         alarmHeader_activity.setVisibility(View.GONE);
         writeFooter_activity.setVisibility(View.GONE);
-
-        listView = findViewById(android.R.id.list);
-
-
-        if(listView == null){
-
-            Log.i("testList Exception", "리스트뷰 생성안되었씁니다");
-        }else{
-
-            Log.i("testList Exception", "리스트뷰 생성되었습니다");
-        }
-
 
         drawer = findViewById(R.id.container);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -274,20 +255,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-
-
-        adapter = new ListAdapter();
+        Bundle listBundle = new Bundle();
 
         expandableListView.setOnChildClickListener((expandableListView, view, groupPosition, childPosition, id) -> {
             switch (groupPosition) {
                 case 0:
                     switch (childPosition) {
                         case 0:
-                            break;
                         case 1:
-                            break;
                         case 2:
-                            break;
                         case 3:
                             break;
                     }
@@ -295,76 +271,16 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     switch (childPosition) {
                         case 0:
-
-                            Call<List<Board>> boardFindall = apiService.boardFindall();
-
-                            boardFindall.enqueue(new Callback<List<Board>>() {
-                                @Override
-                                public void onResponse(Call<List<Board>> call, Response<List<Board>> response) {
-
-                                    List<Board> responsebody = response.body();
-
-                                    try {
-
-                                        for(int i = 0; responsebody.size() > i; i++){
-
-                                            List<InsertTag> tagbody = responsebody.get(i).getInsertTag();
-
-                                            for(int i1 = 0; tagbody.size() > i1; i1++){
-
-                                                if(tagbody.get(i1).getTag().getTagNum() == (childPosition+1)){
-
-                                                    adapter.addItem(responsebody.get(i).getBoardContent(), responsebody.get(i).getBoardCreateDate());
-
-
-                                                }
-
-                                            }
-
-                                        }
-
-                                        for (int i = 0; responsebody.size() > i; i++) {
-
-                                            adapter.addItem(responsebody.get(i).getBoardContent(), responsebody.get(i).getBoardCreateDate());
-
-                                        }
-
-                                    }catch (Exception e){
-
-                                        Log.i("testList Exception", e.toString());
-
-                                    }
-
-                                    if(listView == null){
-
-                                        Log.i("testList Exception", "널입니다");
-                                    }else{
-
-                                        Log.i("testList Exception", "아입니다");
-                                    }
-
-                                    listView.setAdapter(adapter);
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<Board>> call, Throwable t) {
-
-                                    Log.i("testList onFailure", t.toString());
-
-                                }
-                            });
-                            storyFragShow();
-                            break;
                         case 1:
-                            break;
                         case 2:
-                            break;
                         case 3:
-                            break;
                         case 4:
-                            break;
                         case 5:
+                            listBundle.putInt("groupPosition", groupPosition);
+                            listBundle.putInt("childPosition", childPosition);
+                            storyFragment.setArguments(listBundle);
+                            storyFragShow();
+                            drawer.closeDrawer(Gravity.LEFT);
                             break;
                     }
                     break;
@@ -477,34 +393,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button locationButton_activity = findViewById(R.id.locationButton_activity);
-        locationButton_activity.setOnClickListener(view -> {
-            mainFragShow();
-        });
+        locationButton_activity.setOnClickListener(view -> mainFragShow());
 
         Button compassButton_activity = findViewById(R.id.compassButton_activity);
-        compassButton_activity.setOnClickListener(view -> {
-            hashFragShow();
-        });
+        compassButton_activity.setOnClickListener(view -> hashFragShow());
 
         Button writeButton_activity = findViewById(R.id.writeButton_activity);
-        writeButton_activity.setOnClickListener(view -> {
-            writeFragShow();
-        });
+        writeButton_activity.setOnClickListener(view -> writeFragShow());
 
         Button alarmButton_activity = findViewById(R.id.alarmButton_activity);
-        alarmButton_activity.setOnClickListener(view -> {
-            alarmFragShow();
-        });
+        alarmButton_activity.setOnClickListener(view -> alarmFragShow());
 
         Button profileButton_activity = findViewById(R.id.profileButton_activity);
-        profileButton_activity.setOnClickListener(view -> {
-            profileFragShow();
-        });
+        profileButton_activity.setOnClickListener(view -> profileFragShow());
 
         Button writeHeaderCancle = findViewById(R.id.writeHeaderCancle);
-        writeHeaderCancle.setOnClickListener(view -> {
-            mainFragShow();
-        });
+        writeHeaderCancle.setOnClickListener(view -> mainFragShow());
 
         writeHeaderSave = findViewById(R.id.writeHeaderSave);
         writeHeaderSave.setOnClickListener(view -> {

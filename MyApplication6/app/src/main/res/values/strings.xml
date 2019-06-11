@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application6</string>
+    <string name="button1">프래그먼트 전환</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="textView1">Fragment1</string>
+</resources>

@@ -18,12 +18,10 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface ApiService {
 
     String URL = "http://192.168.0.82:8000";
-
 
     @POST("/attach/save")
     Call<AttachFile> attachSave();
