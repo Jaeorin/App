@@ -5,17 +5,17 @@
     android:layout_height="200dp">
 
     <FrameLayout
+        android:id="@+id/list_comment_group_id_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_main_comment_recommend_item">
+        android:layout_height="match_parent" >
 
         <ImageView
-            android:id="@+id/fragment_main_comment_recommend_image"
+            android:id="@+id/list_comment_group_id_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <TextView
-            android:id="@+id/fragment_main_comment_recommend_item_text"
+            android:id="@+id/list_comment_group_id_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"

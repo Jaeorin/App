@@ -7,18 +7,17 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingTop="20dp"
-    tools:context=".Main.Profile.Bookmark">
+    tools:context=".Main.ProfileFrag.Bookmark">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
-        android:id="@+id/image_profileBookmarkFragment"
+        android:id="@+id/activity_main_profile_bookmark_id_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/image_profilecontentfragment"
         android:src="@drawable/baseline_favorite_white_36dp" />
 
     <TextView
-        android:id="@+id/content1_profileBookmarkFragment"
+        android:id="@+id/activity_main_profile_bookmark_id_content1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -27,7 +26,7 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/content2_profileBookmarkFragment"
+        android:id="@+id/activity_main_profile_bookmark_id_content2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -36,7 +35,7 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/content3_profileBookmarkFragment"
+        android:id="@+id/activity_main_profile_bookmark_id_content3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -12,13 +12,13 @@ import com.iot.eround.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MenuAdapter extends BaseExpandableListAdapter {
+public class MainMenuAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<String> arrayGroup;
     private HashMap<String, ArrayList<String>> arrayChild;
 
-    public MenuAdapter(Context context, ArrayList<String> arrayGroup, HashMap<String, ArrayList<String>> arrayChild){
+    public MainMenuAdapter(Context context, ArrayList<String> arrayGroup, HashMap<String, ArrayList<String>> arrayChild){
         super();
         this.context = context;
         this.arrayGroup = arrayGroup;
@@ -65,9 +65,9 @@ public class MenuAdapter extends BaseExpandableListAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.menu_group, null);
+            view = inflater.inflate(R.layout.expandable_menu_group, null);
         }
-        TextView testGroup = view.findViewById(R.id.testGroup);
+        TextView testGroup = view.findViewById(R.id.expandable_menu_group_id_item);
         testGroup.setText(groupName);
 
         return view;
@@ -82,9 +82,9 @@ public class MenuAdapter extends BaseExpandableListAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.menu_child, null);
+            view = inflater.inflate(R.layout.expandable_menu_child, null);
         }
-        TextView testGroup = view.findViewById(R.id.testChild);
+        TextView testGroup = view.findViewById(R.id.expandable_menu_child_id_item);
         testGroup.setText(childName);
 
         return view;

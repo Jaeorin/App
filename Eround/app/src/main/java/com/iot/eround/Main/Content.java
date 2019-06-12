@@ -1,7 +1,6 @@
 package com.iot.eround.Main;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,28 +8,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.iot.eround.MainActivity;
 import com.iot.eround.R;
 import com.iot.eround.Util.ApiService;
+import com.iot.eround.Util.ImageRoader;
 import com.iot.eround.VO.Board;
+import com.iot.eround.VO.Feeling;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Content extends Fragment {
 
-    Board board;
-    private List<Bitmap> bitmap;
-    private List<String> content;
+    List<Integer> boardRandomNumberArray = new ArrayList<>();
+    Random random = new Random();
+    ImageRoader imageRoader = new ImageRoader();
 
-    // 메인화면 탭 시 답글작성 모드인지 확인하는 값(0 = 통상, 1 = 댓글작성)
+    int[] defaultRandomNumberArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     int commentMode = 0;
+
+
+    public Board Translate(Board board) {
+
+        Optional<Board> optionalBoard = Optional.of(board);
+
+        Feeling feeling = new Feeling(0, "", "", null, null, null);
+
+        board.setFeeling(optionalBoard.map(Board::getFeeling).orElse(feeling));
+
+        return board;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,100 +58,144 @@ public class Content extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_main_content, container, false);
 
-        Call<List<Board>> boardFindall = ((MainActivity)getActivity()).apiService.boardFindall();
+        MainActivity mainActivity = (MainActivity) getActivity();
 
-        boardFindall.enqueue(new Callback<List<Board>>() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiService.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Button contentHeaderMenu = mainActivity.findViewById(R.id.activity_main_id_content_header_menu);
+        Button contentHeaderClose = mainActivity.findViewById(R.id.activity_main_id_content_header_close);
+        Button contentHeaderMore = mainActivity.findViewById(R.id.activity_main_id_content_header_more);
+        TextView contentHeaderTitle = mainActivity.findViewById(R.id.activity_main_id_content_header_title);
+
+        Call<List<Board>> boardFindAll = apiService.boardFindall();
+        boardFindAll.enqueue(new Callback<List<Board>>() {
             @Override
             public void onResponse(Call<List<Board>> call, Response<List<Board>> response) {
 
-                try {
+                List<Board> responseBody = response.body();
 
-                    List<Board> responsebody = response.body();
+                for(int i = 0; responseBody.size() > i; i++){
+                    boardRandomNumberArray.add(responseBody.get(i).getBoardNum());
 
-                    for(int i = 0; responsebody.size() > i; i++) {
+                }
 
-                        board = ((MainActivity) getActivity()).Translate(response.body().get(i));
+                int boardRandomNumber = boardRandomNumberArray.get(random.nextInt(responseBody.size()));
 
-                        if (board.getAttachFile().size() == 0) {
+                Call<Board> mainContent = apiService.boardFindby(boardRandomNumber);
 
-                            ((MainActivity) getActivity()).url = ApiService.URL + "/image/" + (((MainActivity) getActivity()).random.nextInt(((MainActivity) getActivity()).defaultRandomNumberArray.length) + 1) + ".jpg";
+                mainContent.enqueue(new Callback<Board>() {
+                    @Override
+                    public void onResponse(Call<Board> call, Response<Board> response) {
+
+                        Board board = Translate(response.body());
+                        String url;
+
+                        if(board.getAttachFile().size() == 0) {
+
+                            url = ApiService.URL + "/image/" + (random.nextInt(defaultRandomNumberArray.length) + 1) + ".jpg";
 
                         } else {
 
-                            ((MainActivity) getActivity()).url = ApiService.URL + board.getAttachFile().get(1).getFilePath();
+                            url = ApiService.URL + board.getAttachFile().get(1).getFilePath();
 
                         }
 
-//                        bitmap.add(((MainActivity) getActivity()).imageRoader.getBitmapImg(((MainActivity) getActivity()).url));
-//                        content.add(board.getBoardContent());
+                        try {
 
+                            ImageView backgroundImage = mainActivity.findViewById(R.id.activity_main_content_id_background_image);
+                            backgroundImage.setImageBitmap(imageRoader.getBitmapImg(url));
+
+                            TextView text = mainActivity.findViewById(R.id.activity_main_content_id_body_text);
+                            text.setText(board.getBoardContent());
+
+                            TextView location = mainActivity.findViewById(R.id.activity_main_content_id_body_location);
+                            location.setText(board.getBoardRegion().toString());
+
+                            TextView time = mainActivity.findViewById(R.id.activity_main_content_id_body_time);
+                            time.setText(board.getBoardCreateDate());
+
+                            if (board.getFeeling().getFeelingNum() == 0) {
+                                TextView emotion = mainActivity.findViewById(R.id.activity_main_content_id_body_emotion);
+                                emotion.setVisibility(View.INVISIBLE);
+                            } else {
+                                TextView emotion = mainActivity.findViewById(R.id.activity_main_content_id_body_emotion);
+                                emotion.setText(board.getFeeling().getFeelingEmoticon());
+                            }
+
+                            TextView favorite = mainActivity.findViewById(R.id.activity_main_content_id_body_favorite);
+                            favorite.setText(String.valueOf(board.getHeart().size()));
+
+                            TextView comment = mainActivity.findViewById(R.id.activity_main_content_id_body_comment);
+                            comment.setText(String.valueOf(board.getReply().size()));
+
+
+
+                        } catch (Exception e) {
+
+                            Log.i("mainContent Exception", e.toString());
+
+                        }
                     }
 
-                } catch (Exception e) {
+                    @Override
+                    public void onFailure(Call<Board> call, Throwable t) {
 
-                    Log.i("mainFragTest Exception e", e.toString());
+                        Log.i("mainContent onFailure", t.toString());
 
-                }
+                    }
+                });
 
             }
 
             @Override
             public void onFailure(Call<List<Board>> call, Throwable t) {
 
-                Log.i("mainFragTest onFailure", t.toString());
+                Log.i("boardFindAll onFailure", t.toString());
 
             }
         });
 
-        LinearLayout header =  getActivity().findViewById(R.id.header_activity);
-        header.setOnClickListener(view1 -> {
-            Button headerMenuButton = getActivity().findViewById(R.id.headerMenu_activity);
-            Button headerCancleButton = getActivity().findViewById(R.id.headerCancle_activity);
-            Button headerMoreButton = getActivity().findViewById(R.id.headerMore_activity);
-            TextView headerText = getActivity().findViewById(R.id.headerName_activity);
-            headerMenuButton.setVisibility(View.VISIBLE);
-            headerCancleButton.setVisibility(View.INVISIBLE);
-            headerMoreButton.setVisibility(View.INVISIBLE);
-            headerText.setText("EROUND");
+        LinearLayout contentHeader =  mainActivity.findViewById(R.id.activity_main_id_content_header);
+        contentHeader.setOnClickListener(view1 -> {
+            contentHeaderMenu.setVisibility(View.VISIBLE);
+            contentHeaderClose.setVisibility(View.INVISIBLE);
+            contentHeaderMore.setVisibility(View.INVISIBLE);
+            contentHeaderTitle.setText("EROUND");
         });
 
-        Button headerCancle_activity =  getActivity().findViewById(R.id.headerCancle_activity);
-        headerCancle_activity.setOnClickListener(view1 -> {
-            Button headerMenuButton = getActivity().findViewById(R.id.headerMenu_activity);
-            Button headerCancleButton = getActivity().findViewById(R.id.headerCancle_activity);
-            Button headerMoreButton = getActivity().findViewById(R.id.headerMore_activity);
-            TextView headerText = getActivity().findViewById(R.id.headerName_activity);
-            headerMenuButton.setVisibility(View.VISIBLE);
-            headerCancleButton.setVisibility(View.INVISIBLE);
-            headerMoreButton.setVisibility(View.INVISIBLE);
-            headerText.setText("EROUND");
+        contentHeaderClose.setOnClickListener(view2 -> {
+            contentHeaderMenu.setVisibility(View.VISIBLE);
+            contentHeaderClose.setVisibility(View.INVISIBLE);
+            contentHeaderMore.setVisibility(View.INVISIBLE);
+            contentHeaderTitle.setText("EROUND");
         });
 
-        Button contentMore_mainFragment = view.findViewById(R.id.contentMore_mainFragment);
-        contentMore_mainFragment.setOnClickListener(view1 -> {
-            Intent intent = getActivity().getIntent();
-            getActivity().finish();
-            getActivity().startActivity(intent);
+        Button bodyMore = view.findViewById(R.id.activity_main_content_id_body_more);
+        bodyMore.setOnClickListener(view1 -> {
+            Intent intent = mainActivity.getIntent();
+            mainActivity.finish();
+            mainActivity.startActivity(intent);
         });
 
-        LinearLayout mainContent = view.findViewById(R.id.content_mainFragment);
+        LinearLayout mainContent = view.findViewById(R.id.activity_main_content_id_body);
         mainContent.setOnClickListener(view1 -> {
             commentMode = 1 - commentMode;
-            Button headerMenuButton = getActivity().findViewById(R.id.headerMenu_activity);
-            Button headerCancleButton = getActivity().findViewById(R.id.headerCancle_activity);
-            Button headerMoreButton = getActivity().findViewById(R.id.headerMore_activity);
-            TextView headerText = getActivity().findViewById(R.id.headerName_activity);
+
             if (commentMode == 0) {
-                headerMenuButton.setVisibility(View.INVISIBLE);
-                headerCancleButton.setVisibility(View.VISIBLE);
-                headerMoreButton.setVisibility(View.VISIBLE);
-                headerText.setText("");
+                contentHeaderMenu.setVisibility(View.INVISIBLE);
+                contentHeaderClose.setVisibility(View.VISIBLE);
+                contentHeaderMore.setVisibility(View.VISIBLE);
+                contentHeaderTitle.setText("");
 
             } else {
-                headerMenuButton.setVisibility(View.VISIBLE);
-                headerCancleButton.setVisibility(View.INVISIBLE);
-                headerMoreButton.setVisibility(View.INVISIBLE);
-                headerText.setText("EROUND");
+                contentHeaderMenu.setVisibility(View.VISIBLE);
+                contentHeaderClose.setVisibility(View.INVISIBLE);
+                contentHeaderMore.setVisibility(View.INVISIBLE);
+                contentHeaderTitle.setText("EROUND");
             }
         });
 

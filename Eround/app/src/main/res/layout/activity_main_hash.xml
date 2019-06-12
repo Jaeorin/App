@@ -17,13 +17,13 @@
         android:padding="10dp">
 
         <FrameLayout
-            android:id="@+id/tag1_hashFragment"
+            android:id="@+id/activity_main_hash_id_tag"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="10dp">
 
             <ImageView
-                android:id="@+id/tag1BackGround_hashFragment"
+                android:id="@+id/activity_main_hash_id_tag_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/tagBackGround_hashFragment"
@@ -38,7 +38,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tag1Content1_hashFragment"
+                    android:id="@+id/activity_main_hash_id_tag_content1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -52,7 +52,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tag1Content2_hashFragment"
+                        android:id="@+id/activity_main_hash_id_tag_content2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -67,137 +67,11 @@
                         android:textColor="#FFFFFF" />
 
                     <TextView
-                        android:id="@+id/tag1Content3_hashFragment"
+                        android:id="@+id/activity_main_hash_id_tag_content3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/tag1Content3_hashFragment"
-                        android:textColor="#FFFFFF" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/tag2_hashFragment"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp">
-
-            <ImageView
-                android:id="@+id/tag2BackGround_hashFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/tagBackGround_hashFragment"
-                android:scaleType="centerCrop"
-                android:tint="#99000000"
-                app:srcCompat="@drawable/ic_launcher_background" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tag2Content1_hashFragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/tag2Content1_hashFragment"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tag2Content2_hashFragment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/tag2Content2_hashFragment"
-                        android:textColor="#FFFFFF" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/dot_hashFragment"
-                        android:textColor="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/tag2Content3_hashFragment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/tag2Content3_hashFragment"
-                        android:textColor="#FFFFFF" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/tag3_hashFragment"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp">
-
-            <ImageView
-                android:id="@+id/tag3BackGround_hashFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/tagBackGround_hashFragment"
-                android:scaleType="centerCrop"
-                android:tint="#99000000"
-                app:srcCompat="@drawable/ic_launcher_background" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tag3Content1_hashFragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/tag3Content1_hashFragment"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tag3Content2_hashFragment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/tag3Content2_hashFragment"
-                        android:textColor="#FFFFFF" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/dot_hashFragment"
-                        android:textColor="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/tag3Content3_hashFragment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/tag3Content3_hashFragment"
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 

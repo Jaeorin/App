@@ -15,14 +15,14 @@ import com.iot.eround.VO.Board;
 
 import java.util.ArrayList;
 
-public class ListAdapter extends BaseAdapter {
+public class StoryAdapter extends BaseAdapter {
 
     private ArrayList<Board> boardList = new ArrayList<>();
     private ArrayList<Bitmap> BitmapList = new ArrayList<>();
 
     private Context context;
 
-    public ListAdapter() {
+    public StoryAdapter() {
 
     }
 
@@ -40,13 +40,13 @@ public class ListAdapter extends BaseAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.story_group, parent, false);
+            view = inflater.inflate(R.layout.list_story_group, parent, false);
         }
 
-        TextView tagList_Content1 = view.findViewById(R.id.tagList_Content1);
-        TextView tagList_Content2 = view.findViewById(R.id.tagList_Content2);
-        TextView tagList_Content3 = view.findViewById(R.id.tagList_Content3);
-        ImageView tagList_BackGround = view.findViewById(R.id.tagList_BackGround);
+        TextView tagList_Content1 = view.findViewById(R.id.list_story_group_id_content1);
+        TextView tagList_Content2 = view.findViewById(R.id.list_story_group_id_content2);
+        TextView tagList_Content3 = view.findViewById(R.id.list_story_group_id_content3);
+        ImageView tagList_BackGround = view.findViewById(R.id.list_story_group_id_tag_background);
 
         Board board = boardList.get(position);
         Bitmap bitmap = BitmapList.get(position);

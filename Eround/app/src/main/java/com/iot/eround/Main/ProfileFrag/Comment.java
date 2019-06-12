@@ -1,4 +1,4 @@
-package com.iot.eround.Main.Profile;
+package com.iot.eround.Main.ProfileFrag;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

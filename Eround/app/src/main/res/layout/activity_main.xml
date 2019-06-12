@@ -15,37 +15,32 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/mainFrag_activity"
+            android:id="@+id/activity_main_id_mainFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/hashFrag_activity"
+            android:id="@+id/activity_main_id_hashFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/writeFrag_activity"
+            android:id="@+id/activity_main_id_writeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/alarmFrag_activity"
+            android:id="@+id/activity_main_id_alarmFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/profileFrag_activity"
+            android:id="@+id/activity_main_id_profileFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/menuCommonFrag_activity"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <FrameLayout
-            android:id="@+id/storyFrag_activity"
+            android:id="@+id/activity_main_id_storyFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -55,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/header_activity"
+                android:id="@+id/activity_main_id_content_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -68,14 +63,14 @@
                     android:layout_weight="1">
 
                     <Button
-                        android:id="@+id/headerMenu_activity"
+                        android:id="@+id/activity_main_id_content_header_menu"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/baseline_menu_white_36dp"
                         android:visibility="visible" />
 
                     <Button
-                        android:id="@+id/headerCancle_activity"
+                        android:id="@+id/activity_main_id_content_header_close"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/baseline_close_white_36dp"
@@ -91,7 +86,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/headerName_activity"
+                        android:id="@+id/activity_main_id_content_header_title"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -103,7 +98,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/headerMore_activity"
+                    android:id="@+id/activity_main_id_content_header_more"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="10dp"
@@ -114,7 +109,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/hashHeader_activity"
+                android:id="@+id/activity_main_id_hash_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -123,7 +118,7 @@
                 android:visibility="gone">
 
                 <EditText
-                    android:id="@+id/hashHeaderSearch_activity"
+                    android:id="@+id/activity_main_id_hash_search"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:autofillHints=""
@@ -135,7 +130,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/alarmHeader_activity"
+                android:id="@+id/activity_main_id_alarm_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -158,7 +153,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/alarmHeaderName_activity"
+                        android:id="@+id/activity_main_id_alarm_header_name"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -170,7 +165,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/alarmHeaderMore_activity"
+                    android:id="@+id/activity_main_id_alarm_header_more"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="10dp"
@@ -181,7 +176,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/writeHeader_activity"
+                android:id="@+id/activity_main_id_write_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -189,7 +184,7 @@
                 android:visibility="gone">
 
                 <Button
-                    android:id="@+id/writeHeaderCancle"
+                    android:id="@+id/activity_main_id_write_header_close"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="10dp"
@@ -204,7 +199,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/writeHeaderEmotion"
+                        android:id="@+id/activity_main_id_write_header_emotion"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_marginEnd="10dp"
@@ -212,7 +207,7 @@
                         style="?android:attr/borderlessButtonStyle" />
 
                     <Button
-                        android:id="@+id/writeHeaderBackground"
+                        android:id="@+id/activity_main_id_write_header_background"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_marginEnd="10dp"
@@ -220,7 +215,7 @@
                         style="?android:attr/borderlessButtonStyle" />
 
                     <Button
-                        android:id="@+id/writeHeaderLocation"
+                        android:id="@+id/activity_main_id_write_header_location"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_marginEnd="10dp"
@@ -229,7 +224,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/writeHeaderSave"
+                    android:id="@+id/activity_main_id_write_header_save"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="10dp"
@@ -246,7 +241,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <LinearLayout
-                android:id="@+id/footer_activity"
+                android:id="@+id/activity_main_id_content_footer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
@@ -258,7 +253,7 @@
                     android:layout_weight="1">
 
                     <Button
-                        android:id="@+id/locationButton_activity"
+                        android:id="@+id/activity_main_id_content_footer_location"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
@@ -271,7 +266,7 @@
                     android:layout_weight="1">
 
                     <Button
-                        android:id="@+id/compassButton_activity"
+                        android:id="@+id/activity_main_id_content_footer_compass"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
@@ -284,7 +279,7 @@
                     android:layout_weight="1">
 
                     <Button
-                        android:id="@+id/writeButton_activity"
+                        android:id="@+id/activity_main_id_content_footer_write"
                         android:layout_width="48dip"
                         android:layout_height="48dip"
                         android:layout_gravity="center"
@@ -297,7 +292,7 @@
                     android:layout_weight="1">
 
                     <Button
-                        android:id="@+id/alarmButton_activity"
+                        android:id="@+id/activity_main_id_content_footer_alarm"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
@@ -310,7 +305,7 @@
                     android:layout_weight="1">
 
                     <Button
-                        android:id="@+id/profileButton_activity"
+                        android:id="@+id/activity_main_id_content_footer_profile"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
@@ -319,7 +314,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/writeFooter_activity"
+                android:id="@+id/activity_main_id_write_footer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -368,7 +363,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/left_drawer_activity"
+        android:id="@+id/activity_main_id_list"
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -376,7 +371,7 @@
         android:orientation="vertical">
 
         <ExpandableListView
-            android:id="@+id/expandableListView_activity"
+            android:id="@+id/expandable_list_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp" />

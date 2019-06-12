@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.iot.eround.Main.Profile.Bookmark;
-import com.iot.eround.Main.Profile.Comment;
-import com.iot.eround.Main.Profile.Content;
-import com.iot.eround.Main.Profile.Tag;
+import com.iot.eround.Main.ProfileFrag.Bookmark;
+import com.iot.eround.Main.ProfileFrag.Comment;
+import com.iot.eround.Main.ProfileFrag.Content;
+import com.iot.eround.Main.ProfileFrag.Tag;
 import com.iot.eround.R;
 
 public class Profile extends Fragment {
@@ -27,9 +27,9 @@ public class Profile extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_main_profile, container, false);
 
-        getFragmentManager().beginTransaction().replace(R.id.Fragment_profile, profileContentFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileContentFragment).commit();
 
-        TabLayout tab = view.findViewById(R.id.tab_profile);
+        TabLayout tab = view.findViewById(R.id.activity_main_profile_id_tab);
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -38,19 +38,19 @@ public class Profile extends Fragment {
 
                 if (position == 0) {
 
-                    getFragmentManager().beginTransaction().replace(R.id.Fragment_profile, profileContentFragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileContentFragment).commit();
 
                 } else if (position == 1) {
 
-                    getFragmentManager().beginTransaction().replace(R.id.Fragment_profile, profileTagFragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileTagFragment).commit();
 
                 } else if (position == 2) {
 
-                    getFragmentManager().beginTransaction().replace(R.id.Fragment_profile, profileCommentFragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileCommentFragment).commit();
 
                 } else if (position == 3) {
 
-                    getFragmentManager().beginTransaction().replace(R.id.Fragment_profile, profileBookmarkFragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileBookmarkFragment).commit();
 
                 }
 

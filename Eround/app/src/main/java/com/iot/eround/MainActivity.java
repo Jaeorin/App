@@ -1,6 +1,5 @@
 package com.iot.eround;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.iot.eround.Adapter.MenuAdapter;
+import com.iot.eround.Adapter.MainMenuAdapter;
 import com.iot.eround.Main.Alarm;
 import com.iot.eround.Main.Content;
 import com.iot.eround.Main.Hash;
@@ -29,16 +28,15 @@ import com.iot.eround.Util.ApiService;
 import com.iot.eround.Util.ImageRoader;
 import com.iot.eround.Util.RetroCallback;
 import com.iot.eround.VO.Board;
-import com.iot.eround.VO.Feeling;
 import com.iot.eround.VO.Region;
 import com.iot.eround.VO.Subscribe;
 import com.iot.eround.VO.Tags;
 import com.iot.eround.VO.Users;
+import com.iot.eround.VOApp.MenuContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -49,51 +47,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    LinearLayout header_activity;
-    LinearLayout hashHeader_activity;
-    LinearLayout writeHeader_activity;
-    LinearLayout alarmHeader_activity;
-    LinearLayout writeFooter_activity;
-    Button headerMenuButton;
-    Button headerCancleButton;
-    Button headerMoreButton;
-    TextView headerText;
+    Fragment mainFragment = new Content();
+    Fragment hashFragment = new Hash();
+    Fragment writeFragment = new Write();
+    Fragment alarmFragment = new Alarm();
+    Fragment profileFragment = new Profile();
+    Fragment storyFragment = new Story();
+    Random random = new Random();
+    ImageRoader imageRoader = new ImageRoader();
+    ArrayList<String> arrayGroup = new ArrayList<>();
+    HashMap<String, ArrayList<String>> arrayChild = new HashMap<>();
+    MenuContext menuContext = new MenuContext();
 
-    public Fragment mainFragment = new Content();
-    public Fragment hashFragment = new Hash();
-    public Fragment writeFragment = new Write();
-    public Fragment alarmFragment = new Alarm();
-    public Fragment profileFragment = new Profile();
-    public Fragment storyFragment = new Story();
-    public Retrofit retrofit;
-    public static ApiService apiService;
+    long pressedTime = 0;
 
-    public Random random = new Random();
-    public ImageRoader imageRoader = new ImageRoader();
-    public List<Integer> boardRandomNumberArray = new ArrayList<>();
-    public int[] defaultRandomNumberArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    public int boardRandomNumber;
-    public String url;
-
-    DrawerLayout drawer;
-
-    ExpandableListView expandableListView;
-    private ArrayList<String> arrayGroup = new ArrayList<>();
-    private HashMap<String, ArrayList<String>> arrayChild = new HashMap<>();
-
-    private long pressedTime;
-
-    TextView writeHeaderSave;
-
-    Context mContext;
-
-    public Context getContext() {
-        return mContext;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
+    int[] defaultRandomNumberArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 
     @Override
@@ -101,49 +69,51 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setContext(this);
+        menuContext.setMenuContext(this);
 
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiService.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        apiService = retrofit.create(ApiService.class);
+        ApiService apiService = retrofit.create(ApiService.class);
 
-        header_activity = findViewById(R.id.header_activity);
-        hashHeader_activity = findViewById(R.id.hashHeader_activity);
-        writeHeader_activity = findViewById(R.id.writeHeader_activity);
-        alarmHeader_activity = findViewById(R.id.alarmHeader_activity);
-        writeFooter_activity = findViewById(R.id.writeFooter_activity);
-        headerMenuButton = findViewById(R.id.headerMenu_activity);
-        headerCancleButton = findViewById(R.id.headerCancle_activity);
-        headerMoreButton = findViewById(R.id.headerMore_activity);
-        headerText = findViewById(R.id.headerName_activity);
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_id_mainFragment, mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_id_hashFragment, hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_id_writeFragment, writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_id_alarmFragment, alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_id_profileFragment, profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_main_id_storyFragment, storyFragment).commit();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.mainFrag_activity, mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.hashFrag_activity, hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.writeFrag_activity, writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.alarmFrag_activity, alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.profileFrag_activity, profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.storyFrag_activity, storyFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
-        hashHeader_activity.setVisibility(View.GONE);
-        writeHeader_activity.setVisibility(View.GONE);
-        alarmHeader_activity.setVisibility(View.GONE);
-        writeFooter_activity.setVisibility(View.GONE);
 
-        drawer = findViewById(R.id.container);
+        LinearLayout contentHeader = findViewById(R.id.activity_main_id_content_header);
+        LinearLayout hashHeader = findViewById(R.id.activity_main_id_hash_header);
+        hashHeader.setVisibility(View.GONE);
+        LinearLayout writeHeader = findViewById(R.id.activity_main_id_write_header);
+        writeHeader.setVisibility(View.GONE);
+        LinearLayout alarmHeader = findViewById(R.id.activity_main_id_alarm_header);
+        alarmHeader.setVisibility(View.GONE);
+        LinearLayout writeFooter = findViewById(R.id.activity_main_id_write_footer);
+        writeFooter.setVisibility(View.GONE);
+        LinearLayout contentFooter = findViewById(R.id.activity_main_id_content_footer);
+
+        Button contentHeaderMenu = findViewById(R.id.activity_main_id_content_header_menu);
+        Button contentHeaderClose = findViewById(R.id.activity_main_id_content_header_close);
+        Button contentHeaderMore = findViewById(R.id.activity_main_id_content_header_more);
+        TextView contentHeaderTitle = findViewById(R.id.activity_main_id_content_header_title);
+
+        DrawerLayout drawer = findViewById(R.id.container);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-
-        expandableListView = this.findViewById(R.id.expandableListView_activity);
+        ExpandableListView expandableListView = this.findViewById(R.id.expandable_list_menu);
 
         arrayGroup.add("일반");
         arrayGroup.add("추천 보기");
@@ -158,72 +128,63 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<String> arrayTest2 = new ArrayList<>();
 
-        Call<List<Tags>> tagsFindall = apiService.tagsFindall();
-
-        tagsFindall.enqueue(new Callback<List<Tags>>() {
+        Call<List<Tags>> tagsFindAll = apiService.tagsFindall();
+        tagsFindAll.enqueue(new Callback<List<Tags>>() {
             @Override
             public void onResponse(Call<List<Tags>> call, Response<List<Tags>> response) {
 
-                List<Tags> responsebody = response.body();
+                List<Tags> responseBody = response.body();
 
                 try {
-
-                    for(int i = 0; responsebody.size() > i; i++){
-                        arrayTest2.add(responsebody.get(i).getTagName());
-
+                    for(int i = 0; responseBody.size() > i; i++){
+                        arrayTest2.add(responseBody.get(i).getTagName());
                     }
-
                 } catch (Exception e) {
-
-                    Log.i("test5 Exception e", e.toString());
-
+                    Log.i("tagsFindAll Exception", e.toString());
                 }
+
             }
 
             @Override
             public void onFailure(Call<List<Tags>> call, Throwable t) {
 
-                Log.i("test1 onFailure", t.toString());
+                Log.i("tagsFindAll onFailure", t.toString());
 
             }
-        });
 
+        });
 
         ArrayList<String> arrayTest3 = new ArrayList<>();
 
-        Call<List<Subscribe>> subscribeFindall = apiService.subscribeFindall();
-
-        subscribeFindall.enqueue(new Callback<List<Subscribe>>() {
+        Call<List<Subscribe>> subscribeFindAll = apiService.subscribeFindall();
+        subscribeFindAll.enqueue(new Callback<List<Subscribe>>() {
             @Override
             public void onResponse(Call<List<Subscribe>> call, Response<List<Subscribe>> response) {
 
-                List<Subscribe> responsebody = response.body();
+                List<Subscribe> responseBody = response.body();
 
                 try {
-
-                    for(int i = 0; responsebody.size() > i; i++){
-                        if(responsebody.get(i).getUser().getUserNum() == 1) {
-                            arrayTest3.add(responsebody.get(i).getTag().getTagName());
+                    for(int i = 0; responseBody.size() > i; i++){
+                        if(responseBody.get(i).getUser().getUserNum() == 1) {
+                            arrayTest3.add(responseBody.get(i).getTag().getTagName());
                         }
                     }
-
                     if(arrayTest3.isEmpty()){
                         arrayTest3.add("구독 중인 태그가 없습니다");
                     }
-
                 } catch (Exception e) {
-
-                    Log.i("test5 Exception e", e.toString());
-
+                    Log.i("subscribeFindAll Exception", e.toString());
                 }
+
             }
 
             @Override
             public void onFailure(Call<List<Subscribe>> call, Throwable t) {
 
-                Log.i("test1 onFailure", t.toString());
+                Log.i("subscribeFindAll onFailure", t.toString());
 
             }
+
         });
 
         ArrayList<String> arrayTest4 = new ArrayList<>();
@@ -236,29 +197,33 @@ public class MainActivity extends AppCompatActivity {
         arrayChild.put(arrayGroup.get(2), arrayTest3);
         arrayChild.put(arrayGroup.get(3), arrayTest4);
 
-
-        expandableListView.setAdapter(new MenuAdapter(this, arrayGroup, arrayChild));
+        expandableListView.setAdapter(new MainMenuAdapter(this, arrayGroup, arrayChild));
         expandableListView.expandGroup(0);
         expandableListView.expandGroup(1);
         expandableListView.expandGroup(2);
         expandableListView.expandGroup(3);
 
-
         expandableListView.setOnGroupClickListener((arg0, itemView, itemPosition, itemId) -> {
+
             if(itemPosition == 1 || itemPosition == 2 ) {
+
                 if(!expandableListView.isGroupExpanded(itemPosition)) {
                     expandableListView.expandGroup(itemPosition);
                 }else{
                     expandableListView.collapseGroup(itemPosition);
                 }
+
             }
+
             return true;
+
         });
 
         Bundle listBundle = new Bundle();
+        expandableListView.setOnChildClickListener((listView, view, groupPosition, childPosition, id) -> {
 
-        expandableListView.setOnChildClickListener((expandableListView, view, groupPosition, childPosition, id) -> {
             switch (groupPosition) {
+
                 case 0:
                     switch (childPosition) {
                         case 0:
@@ -268,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     break;
+
                 case 1:
                     switch (childPosition) {
                         case 0:
@@ -279,17 +245,24 @@ public class MainActivity extends AppCompatActivity {
                             listBundle.putInt("groupPosition", groupPosition);
                             listBundle.putInt("childPosition", childPosition);
                             storyFragment.setArguments(listBundle);
-                            storyFragShow();
+                            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+                            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+                            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+                            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+                            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+                            getSupportFragmentManager().beginTransaction().show(storyFragment).commit();
                             drawer.closeDrawer(Gravity.LEFT);
                             break;
                     }
                     break;
+
                 case 2:
                     switch (childPosition) {
                         case 0:
                             break;
                     }
                     break;
+
                 case 3:
                     switch (childPosition) {
                         case 0:
@@ -300,121 +273,161 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     break;
+
             }
+
             return true;
+
         });
 
-        Call<List<Board>> boardFindall = apiService.boardFindall();
+        Button footerLocation = findViewById(R.id.activity_main_id_content_footer_location);
+        footerLocation.setOnClickListener(view -> {
 
-        boardFindall.enqueue(new Callback<List<Board>>() {
-            @Override
-            public void onResponse(Call<List<Board>> call, Response<List<Board>> response) {
+            getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
 
-                List<Board> responsebody = response.body();
+            contentFooter.setBackgroundColor(Color.argb(0,0,0,0));
+            contentFooter.setVisibility(View.VISIBLE);
 
-                for(int i = 0; responsebody.size() > i; i++){
-                    boardRandomNumberArray.add(responsebody.get(i).getBoardNum());
+            contentHeader.setVisibility(View.VISIBLE);
+            hashHeader.setVisibility(View.GONE);
+            writeHeader.setVisibility(View.GONE);
+            alarmHeader.setVisibility(View.GONE);
+            writeFooter.setVisibility(View.GONE);
 
-                }
+            contentHeaderMenu.setVisibility(View.VISIBLE);
+            contentHeaderClose.setVisibility(View.INVISIBLE);
+            contentHeaderMore.setVisibility(View.INVISIBLE);
+            contentHeaderTitle.setText("AROUND");
 
-                boardRandomNumber = boardRandomNumberArray.get(random.nextInt(responsebody.size()));
-
-                Call<Board> mainContent = apiService.boardFindby(boardRandomNumber);
-
-                mainContent.enqueue(new Callback<Board>() {
-                    @Override
-                    public void onResponse(Call<Board> call, Response<Board> response) {
-
-                        Board board = Translate(response.body());
-
-                        if(board.getAttachFile().size() == 0) {
-
-                            url = ApiService.URL + "/image/" + (random.nextInt(defaultRandomNumberArray.length) + 1) + ".jpg";
-
-                        } else {
-
-                            url = ApiService.URL + board.getAttachFile().get(1).getFilePath();
-
-                        }
-
-                        try {
-
-                            ImageView backGroundImage_mainFragment = mainFragment.getView().findViewById(R.id.backGroundImage_mainFragment);
-                            backGroundImage_mainFragment.setImageBitmap(imageRoader.getBitmapImg(url));
-
-                            TextView contentText_mainFragment = mainFragment.getView().findViewById(R.id.contentText_mainFragment);
-                            contentText_mainFragment.setText(board.getBoardContent());
-
-                            TextView location_mainFragment = mainFragment.getView().findViewById(R.id.location_mainFragment);
-                            location_mainFragment.setText(board.getBoardRegion().toString());
-
-                            TextView time_mainFragment = mainFragment.getView().findViewById(R.id.time_mainFragment);
-                            time_mainFragment.setText(board.getBoardCreateDate());
-
-                            if (board.getFeeling().getFeelingNum() == 0) {
-                                TextView emotion_mainFragment = mainFragment.getView().findViewById(R.id.emotion_mainFragment);
-                                emotion_mainFragment.setVisibility(View.INVISIBLE);
-                            } else {
-                                TextView emotion_mainFragment = mainFragment.getView().findViewById(R.id.emotion_mainFragment);
-                                emotion_mainFragment.setText(board.getFeeling().getFeelingEmoticon());
-                            }
-
-                            TextView favorite_mainFragment = mainFragment.getView().findViewById(R.id.favorite_mainFragment);
-                            favorite_mainFragment.setText(String.valueOf(board.getReply().size()));
-
-                            TextView comment_mainFragment = mainFragment.getView().findViewById(R.id.comment_mainFragment);
-                            comment_mainFragment.setText(String.valueOf(board.getHeart().size()));
-
-
-
-                        } catch (Exception e) {
-
-                            Log.i("test5 Exception e", e.toString());
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Board> call, Throwable t) {
-
-                        Log.i("test1 onFailure", t.toString());
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Board>> call, Throwable t) {
-
-                Log.i("test2 onFailure", t.toString());
-
-            }
         });
 
-        Button locationButton_activity = findViewById(R.id.locationButton_activity);
-        locationButton_activity.setOnClickListener(view -> mainFragShow());
+        Button footerCompass = findViewById(R.id.activity_main_id_content_footer_compass);
+        footerCompass.setOnClickListener(view -> {
 
-        Button compassButton_activity = findViewById(R.id.compassButton_activity);
-        compassButton_activity.setOnClickListener(view -> hashFragShow());
+            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().show(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
 
-        Button writeButton_activity = findViewById(R.id.writeButton_activity);
-        writeButton_activity.setOnClickListener(view -> writeFragShow());
+            contentFooter.setBackgroundColor(Color.rgb(0,0,0));
 
-        Button alarmButton_activity = findViewById(R.id.alarmButton_activity);
-        alarmButton_activity.setOnClickListener(view -> alarmFragShow());
+            contentHeader.setVisibility(View.GONE);
+            hashHeader.setVisibility(View.VISIBLE);
+            writeHeader.setVisibility(View.GONE);
+            alarmHeader.setVisibility(View.GONE);
+            writeFooter.setVisibility(View.GONE);
 
-        Button profileButton_activity = findViewById(R.id.profileButton_activity);
-        profileButton_activity.setOnClickListener(view -> profileFragShow());
+        });
 
-        Button writeHeaderCancle = findViewById(R.id.writeHeaderCancle);
-        writeHeaderCancle.setOnClickListener(view -> mainFragShow());
+        Button writeButton_activity = findViewById(R.id.activity_main_id_content_footer_write);
+        writeButton_activity.setOnClickListener(view -> {
 
-        writeHeaderSave = findViewById(R.id.writeHeaderSave);
+            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().show(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+
+            contentFooter.setVisibility(View.GONE);
+
+            contentHeader.setVisibility(View.GONE);
+            hashHeader.setVisibility(View.GONE);
+            writeHeader.setVisibility(View.VISIBLE);
+            alarmHeader.setVisibility(View.GONE);
+            writeFooter.setVisibility(View.VISIBLE);
+
+            String url = ApiService.URL + "/image/" + (random.nextInt(defaultRandomNumberArray.length) + 1) + ".jpg";
+            Log.i("test image", url);
+
+            ImageView backGroundImage_writeFragment = writeFragment.getView().findViewById(R.id.activity_main_write_id_image);
+            backGroundImage_writeFragment.setImageBitmap(imageRoader.getBitmapImg(url));
+
+        });
+
+        Button footerAlarm = findViewById(R.id.activity_main_id_content_footer_alarm);
+        footerAlarm.setOnClickListener(view -> {
+
+            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().show(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+
+            contentFooter.setBackgroundColor(Color.rgb(0,0,0));
+
+            contentHeader.setVisibility(View.GONE);
+            hashHeader.setVisibility(View.GONE);
+            writeHeader.setVisibility(View.GONE);
+            alarmHeader.setVisibility(View.VISIBLE);
+            writeFooter.setVisibility(View.GONE);
+
+        });
+
+        Button footerProfile = findViewById(R.id.activity_main_id_content_footer_profile);
+        footerProfile.setOnClickListener(view -> {
+
+            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().show(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+
+            contentFooter.setBackgroundColor(Color.rgb(0,0,0));
+
+            contentHeader.setVisibility(View.VISIBLE);
+            hashHeader.setVisibility(View.GONE);
+            writeHeader.setVisibility(View.GONE);
+            alarmHeader.setVisibility(View.GONE);
+            writeFooter.setVisibility(View.GONE);
+
+            contentHeaderMenu.setVisibility(View.INVISIBLE);
+            contentHeaderClose.setVisibility(View.INVISIBLE);
+            contentHeaderMore.setVisibility(View.INVISIBLE);
+            contentHeaderTitle.setText("ME");
+
+        });
+
+        Button writeHeaderClose = findViewById(R.id.activity_main_id_write_header_close);
+        writeHeaderClose.setOnClickListener(view -> {
+
+            getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+
+            contentFooter.setBackgroundColor(Color.argb(0,0,0,0));
+            contentFooter.setVisibility(View.VISIBLE);
+
+            contentHeader.setVisibility(View.VISIBLE);
+            hashHeader.setVisibility(View.GONE);
+            writeHeader.setVisibility(View.GONE);
+            alarmHeader.setVisibility(View.GONE);
+            writeFooter.setVisibility(View.GONE);
+
+            contentHeaderMenu.setVisibility(View.VISIBLE);
+            contentHeaderClose.setVisibility(View.INVISIBLE);
+            contentHeaderMore.setVisibility(View.INVISIBLE);
+            contentHeaderTitle.setText("AROUND");
+
+        });
+
+        TextView writeHeaderSave = findViewById(R.id.activity_main_id_write_header_save);
         writeHeaderSave.setOnClickListener(view -> {
 
-            EditText editText_writeFragment = writeFragment.getView().findViewById(R.id.editText_writeFragment);
-            String text = editText_writeFragment.getText().toString();
+            EditText editText = writeFragment.getView().findViewById(R.id.activity_main_write_id_text);
+            String text = editText.getText().toString();
 
             Board board = new Board();
             Users user = new Users();
@@ -424,11 +437,13 @@ public class MainActivity extends AppCompatActivity {
             board.setUser(user);
             board.setBoardRegion(Region.전국);
 
-            postFirst(board, new RetroCallback() {
+            boardSave(board, apiService, new RetroCallback() {
+
                 @Override
                 public void onError(Throwable t) {
                     Log.i("test onError", t.toString());
                 }
+
                 @Override
                 public void onSuccess(int code, Object receivedData) {
                     Board data = (Board) receivedData;
@@ -437,21 +452,39 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("test onSuccess titleResultTextView", data.getBoardContent());
                     Log.i("test onSuccess useridResultTextView", String.valueOf(data.getBoardRegion()));
                     Log.i("test onSuccess bodyResultTextView", String.valueOf(data.getUser().getUserNum()));
-
                 }
+
                 @Override
                 public void onFailure(int code) {
                     Log.i("test onFailure", String.valueOf(code));
                 }
+
             });
 
-            mainFragShow();
+            getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
+
+            contentFooter.setBackgroundColor(Color.argb(0,0,0,0));
+            contentFooter.setVisibility(View.VISIBLE);
+
+            contentHeader.setVisibility(View.VISIBLE);
+            hashHeader.setVisibility(View.GONE);
+            writeHeader.setVisibility(View.GONE);
+            alarmHeader.setVisibility(View.GONE);
+            writeFooter.setVisibility(View.GONE);
+
+            contentHeaderMenu.setVisibility(View.VISIBLE);
+            contentHeaderClose.setVisibility(View.INVISIBLE);
+            contentHeaderMore.setVisibility(View.INVISIBLE);
+            contentHeaderTitle.setText("AROUND");
 
         });
 
-
-        Button headerMenu_activity = findViewById(R.id.headerMenu_activity);
-        headerMenu_activity.setOnClickListener(view -> drawer.openDrawer(Gravity.LEFT));
+        contentHeaderMenu.setOnClickListener(view -> drawer.openDrawer(Gravity.LEFT));
 
     }
 
@@ -473,20 +506,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void boardSave(Board board, ApiService apiService, final RetroCallback callback) {
 
-
-    public Board Translate(Board board) {
-
-        Optional<Board> optionalBoard = Optional.of(board);
-
-        Feeling feeling = new Feeling(0, "", "", null, null, null);
-
-        board.setFeeling(optionalBoard.map(Board::getFeeling).orElse(feeling));
-
-        return board;
-    }
-
-    public void postFirst(Board board, final RetroCallback callback) {
         apiService.boardSave(board).enqueue(new Callback<Board>() {
             @Override
             public void onResponse(Call<Board> call, Response<Board> response) {
@@ -501,111 +522,9 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Board> call, Throwable t) {
                 callback.onError(t);
             }
+
         });
-    }
 
-    public void mainFragShow(){
-        getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
-        LinearLayout footer_activity = findViewById(R.id.footer_activity);
-        footer_activity.setBackgroundColor(Color.argb(0,0,0,0));
-        footer_activity.setVisibility(View.VISIBLE);
-        header_activity.setVisibility(View.VISIBLE);
-        hashHeader_activity.setVisibility(View.GONE);
-        writeHeader_activity.setVisibility(View.GONE);
-        alarmHeader_activity.setVisibility(View.GONE);
-        writeFooter_activity.setVisibility(View.GONE);
-        headerMenuButton.setVisibility(View.VISIBLE);
-        headerCancleButton.setVisibility(View.INVISIBLE);
-        headerMoreButton.setVisibility(View.INVISIBLE);
-        headerText.setText("AROUND");
-    }
-
-    public void hashFragShow(){
-        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().show(hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
-        LinearLayout footer_activity = findViewById(R.id.footer_activity);
-        footer_activity.setBackgroundColor(Color.rgb(0,0,0));
-        header_activity.setVisibility(View.GONE);
-        hashHeader_activity.setVisibility(View.VISIBLE);
-        writeHeader_activity.setVisibility(View.GONE);
-        alarmHeader_activity.setVisibility(View.GONE);
-        writeFooter_activity.setVisibility(View.GONE);
-    }
-
-    public void writeFragShow(){
-        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().show(writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
-        LinearLayout footer_activity = findViewById(R.id.footer_activity);
-        footer_activity.setVisibility(View.GONE);
-        header_activity.setVisibility(View.GONE);
-        hashHeader_activity.setVisibility(View.GONE);
-        writeHeader_activity.setVisibility(View.VISIBLE);
-        alarmHeader_activity.setVisibility(View.GONE);
-        writeFooter_activity.setVisibility(View.VISIBLE);
-        url = ApiService.URL + "/image/" + (random.nextInt(defaultRandomNumberArray.length) + 1) + ".jpg";
-        Log.i("test image", url);
-        ImageView backGroundImage_writeFragment = writeFragment.getView().findViewById(R.id.backGroundImage_writeFragment);
-        backGroundImage_writeFragment.setImageBitmap(imageRoader.getBitmapImg(url));
-    }
-
-    public void alarmFragShow(){
-
-        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().show(alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
-        LinearLayout footer_activity = findViewById(R.id.footer_activity);
-        footer_activity.setBackgroundColor(Color.rgb(0,0,0));
-        header_activity.setVisibility(View.GONE);
-        hashHeader_activity.setVisibility(View.GONE);
-        writeHeader_activity.setVisibility(View.GONE);
-        alarmHeader_activity.setVisibility(View.VISIBLE);
-        writeFooter_activity.setVisibility(View.GONE);
-
-    }
-
-    public void profileFragShow(){
-        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().show(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
-        LinearLayout footer_activity = findViewById(R.id.footer_activity);
-        footer_activity.setBackgroundColor(Color.rgb(0,0,0));
-        header_activity.setVisibility(View.VISIBLE);
-        hashHeader_activity.setVisibility(View.GONE);
-        writeHeader_activity.setVisibility(View.GONE);
-        alarmHeader_activity.setVisibility(View.GONE);
-        writeFooter_activity.setVisibility(View.GONE);
-        headerMenuButton.setVisibility(View.INVISIBLE);
-        headerCancleButton.setVisibility(View.INVISIBLE);
-        headerMoreButton.setVisibility(View.INVISIBLE);
-        headerText.setText("ME");
-    }
-
-    public void storyFragShow(){
-        getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-        getSupportFragmentManager().beginTransaction().show(storyFragment).commit();
     }
 
 }

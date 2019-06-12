@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.iot.eround.Adapter.ListAdapter;
-import com.iot.eround.MainActivity;
+import com.iot.eround.Adapter.StoryAdapter;
 import com.iot.eround.R;
 import com.iot.eround.Util.ApiService;
 import com.iot.eround.Util.ImageRoader;
@@ -26,11 +25,13 @@ import java.util.Random;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Story extends ListFragment {
 
     ListView listview;
-    ListAdapter adapter;
+    StoryAdapter adapter;
     int childPosition;
     Bitmap bitmap;
 
@@ -47,7 +48,13 @@ public class Story extends ListFragment {
 
         View view = inflater.inflate(R.layout.activity_main_story, container, false);
 
-        adapter = new ListAdapter();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiService.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        adapter = new StoryAdapter();
 
         if(getArguments() != null){
 
@@ -59,7 +66,7 @@ public class Story extends ListFragment {
 
         }
 
-        Call<List<Board>> boardFindall = ((MainActivity)getActivity()).apiService.boardFindall();
+        Call<List<Board>> boardFindall = apiService.boardFindall();
 
         boardFindall.enqueue(new Callback<List<Board>>() {
             @Override
@@ -79,7 +86,7 @@ public class Story extends ListFragment {
 
                             if(tagbody.get(i1).getTag().getTagNum() == (childPosition+1)){
 
-                                Call<Board> mainContent = ((MainActivity)getActivity()).apiService.boardFindby(i);
+                                Call<Board> mainContent = apiService.boardFindby(i);
 
                                 mainContent.enqueue(new Callback<Board>() {
                                     @Override

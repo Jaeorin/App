@@ -8,12 +8,12 @@
     tools:context=".Main.Content">
 
     <FrameLayout
-        android:id="@+id/backGround_mainFragment"
+        android:id="@+id/content_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/backGroundImage_mainFragment"
+            android:id="@+id/activity_main_content_id_background_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#9F000000"
@@ -23,7 +23,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/content_mainFragment"
+        android:id="@+id/activity_main_content_id_body"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_marginTop="66dp"
@@ -37,7 +37,7 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/contentAttachment_mainFragment"
+                android:id="@+id/activity_main_content_id_body_attachment"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:contentDescription="@string/menu_tools" />
 
             <TextView
-                android:id="@+id/contentText_mainFragment"
+                android:id="@+id/activity_main_content_id_body_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -55,7 +55,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/contentMore_mainFragment"
+            android:id="@+id/activity_main_content_id_body_more"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
@@ -75,7 +75,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/location_mainFragment"
+                android:id="@+id/activity_main_content_id_body_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -84,7 +84,7 @@
                 android:textColor="#B3FFFFFF" />
 
             <ImageView
-                android:id="@+id/dot_mainFragment"
+                android:id="@+id/activity_main_content_id_body_dot"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
@@ -92,7 +92,7 @@
                 app:srcCompat="@drawable/baseline_adjust_white_36dp2" />
 
             <TextView
-                android:id="@+id/time_mainFragment"
+                android:id="@+id/activity_main_content_id_body_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -100,7 +100,7 @@
                 android:textColor="#B3FFFFFF" />
 
             <TextView
-                android:id="@+id/emotion_mainFragment"
+                android:id="@+id/activity_main_content_id_body_emotion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -116,7 +116,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/favorite_mainFragment"
+                android:id="@+id/activity_main_content_id_body_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -125,7 +125,7 @@
                 android:textColor="#B3FFFFFF" />
 
             <TextView
-                android:id="@+id/comment_mainFragment"
+                android:id="@+id/activity_main_content_id_body_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
