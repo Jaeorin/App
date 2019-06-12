@@ -65,7 +65,7 @@ public class MenuAdapter extends BaseExpandableListAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.activity_menu_group, null);
+            view = inflater.inflate(R.layout.menu_group, null);
         }
         TextView testGroup = view.findViewById(R.id.testGroup);
         testGroup.setText(groupName);
@@ -82,7 +82,7 @@ public class MenuAdapter extends BaseExpandableListAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.activity_menu_child, null);
+            view = inflater.inflate(R.layout.menu_child, null);
         }
         TextView testGroup = view.findViewById(R.id.testChild);
         testGroup.setText(childName);

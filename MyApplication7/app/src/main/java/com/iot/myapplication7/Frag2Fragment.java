@@ -31,10 +31,16 @@ public class Frag2Fragment extends Fragment {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container, new Frag1Fragment()).commit();
+            mainActivity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, new Frag1Fragment())
+                .commit();
+
             }
         });
 
         return view;
+
     }
+
 }

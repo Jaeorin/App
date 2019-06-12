@@ -19,12 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iot.eround.Adapter.MenuAdapter;
-import com.iot.eround.Fragment.Alarm.Alarm;
-import com.iot.eround.Fragment.Hash.Hash;
-import com.iot.eround.Fragment.Main.Main;
-import com.iot.eround.Fragment.Profile.Profile;
-import com.iot.eround.Fragment.Story.Story;
-import com.iot.eround.Fragment.Write.Write;
+import com.iot.eround.Main.Alarm;
+import com.iot.eround.Main.Content;
+import com.iot.eround.Main.Hash;
+import com.iot.eround.Main.Profile;
+import com.iot.eround.Main.Story;
+import com.iot.eround.Main.Write;
 import com.iot.eround.Util.ApiService;
 import com.iot.eround.Util.ImageRoader;
 import com.iot.eround.Util.RetroCallback;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     Button headerMoreButton;
     TextView headerText;
 
-    public Fragment mainFragment = new Main();
+    public Fragment mainFragment = new Content();
     public Fragment hashFragment = new Hash();
     public Fragment writeFragment = new Write();
     public Fragment alarmFragment = new Alarm();

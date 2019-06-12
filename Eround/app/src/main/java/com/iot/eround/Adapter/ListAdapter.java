@@ -40,7 +40,7 @@ public class ListAdapter extends BaseAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.fragment_story_list_group, parent, false);
+            view = inflater.inflate(R.layout.story_group, parent, false);
         }
 
         TextView tagList_Content1 = view.findViewById(R.id.tagList_Content1);
