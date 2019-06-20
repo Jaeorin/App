@@ -324,7 +324,7 @@
                 tools:visibility="invisible">
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/activity_main_id_write_footer_image"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="10dp"
@@ -332,14 +332,14 @@
                     tools:visibility="visible" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/activity_main_id_write_footer_mic"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="10dp"
                     android:background="@drawable/baseline_chat_bubble_white_36dp" />
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/activity_main_id_write_footer_music"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="10dp"
@@ -351,7 +351,7 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/activity_main_id_write_footer_shop"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="10dp"

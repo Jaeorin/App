@@ -9,16 +9,10 @@ import android.view.ViewGroup;
 
 import com.iot.eround.Main.ProfileFrag.Bookmark;
 import com.iot.eround.Main.ProfileFrag.Comment;
-import com.iot.eround.Main.ProfileFrag.Content;
-import com.iot.eround.Main.ProfileFrag.Tag;
+import com.iot.eround.Main.ProfileFrag.ProfileContent;
 import com.iot.eround.R;
 
 public class Profile extends Fragment {
-
-    Fragment profileContentFragment = new Content();
-    Fragment profileTagFragment = new Tag();
-    Fragment profileCommentFragment = new Comment();
-    Fragment profileBookmarkFragment = new Bookmark();
 
 
     @Override
@@ -27,38 +21,57 @@ public class Profile extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_main_profile, container, false);
 
-        getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileContentFragment).commit();
+        ProfileContent profileContent = new ProfileContent();
+        Comment comment = new Comment();
+        Bookmark bookmark = new Bookmark();
+
+        getFragmentManager().beginTransaction().add(R.id.activity_main_profile_id_content, profileContent).show(profileContent).commit();
+        getFragmentManager().beginTransaction().add(R.id.activity_main_profile_id_comment, comment).hide(comment).commit();
+        getFragmentManager().beginTransaction().add(R.id.activity_main_profile_id_bookmark, bookmark).hide(bookmark).commit();
 
         TabLayout tab = view.findViewById(R.id.activity_main_profile_id_tab);
+        tab.addTab(tab.newTab().setText("이야기"));
+        tab.addTab(tab.newTab().setText("내 댓글"));
+        tab.addTab(tab.newTab().setText("북마크"));
+
         tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
-                int position = tab.getPosition();
-
-                if (position == 0) {
-
-                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileContentFragment).commit();
-
-                } else if (position == 1) {
-
-                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileTagFragment).commit();
-
-                } else if (position == 2) {
-
-                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileCommentFragment).commit();
-
-                } else if (position == 3) {
-
-                    getFragmentManager().beginTransaction().replace(R.id.activity_main_profile_id_tab_fragment, profileBookmarkFragment).commit();
-
+                switch (tab.getPosition()){
+                    case 0:
+                        getFragmentManager().beginTransaction().show(profileContent).commit();
+                        getFragmentManager().beginTransaction().hide(comment).commit();
+                        getFragmentManager().beginTransaction().hide(bookmark).commit();
+                        break;
+                    case 1:
+                        getFragmentManager().beginTransaction().hide(profileContent).commit();
+                        getFragmentManager().beginTransaction().show(comment).commit();
+                        getFragmentManager().beginTransaction().hide(bookmark).commit();
+                        break;
+                    case 2:
+                        getFragmentManager().beginTransaction().hide(profileContent).commit();
+                        getFragmentManager().beginTransaction().hide(comment).commit();
+                        getFragmentManager().beginTransaction().show(bookmark).commit();
+                        break;
                 }
-
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                switch (tab.getPosition()){
+                    case 0:
+                        getFragmentManager().beginTransaction().hide(profileContent).commit();
+                        getFragmentManager().beginTransaction().hide(comment).commit();
+                        getFragmentManager().beginTransaction().hide(bookmark).commit();
+                    case 1:
+                        getFragmentManager().beginTransaction().hide(profileContent).commit();
+                        getFragmentManager().beginTransaction().hide(comment).commit();
+                        getFragmentManager().beginTransaction().hide(bookmark).commit();
+                    case 2:
+                        getFragmentManager().beginTransaction().hide(profileContent).commit();
+                        getFragmentManager().beginTransaction().hide(comment).commit();
+                        getFragmentManager().beginTransaction().hide(bookmark).commit();
+                }
             }
 
             @Override

@@ -6,41 +6,12 @@
     android:background="#E0E0E0"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="20dp"
-    tools:context=".Main.ProfileFrag.Content">
+    android:paddingTop="5dp"
+    tools:context=".Main.ProfileFrag.ProfileContent">
 
-    <ImageView
-        android:id="@+id/activity_main_profile_content_id_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="@string/image_profilecontentfragment"
-        android:src="@drawable/baseline_create_white_48dp" />
-
-    <TextView
-        android:id="@+id/activity_main_profile_content_id_content1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/content1_profileContentFragment"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/activity_main_profile_content_id_content2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/content2_profileContentFragment"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/activity_main_profile_content_id_content3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/content3_profileContentFragment"
-        android:textSize="16sp" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_main_profile_content_id_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -25,6 +25,8 @@ public class Heart {
         this.heartUpdateDate = heartUpdateDate;
     }
 
+    public Heart(){}
+
     public int getHeartNum() {
         return heartNum;
     }

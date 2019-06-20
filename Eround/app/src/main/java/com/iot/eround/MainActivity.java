@@ -1,5 +1,7 @@
 package com.iot.eround;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -47,12 +50,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    Fragment mainFragment = new Content();
-    Fragment hashFragment = new Hash();
-    Fragment writeFragment = new Write();
-    Fragment alarmFragment = new Alarm();
-    Fragment profileFragment = new Profile();
-    Fragment storyFragment = new Story();
+    public Fragment mainFragment = new Content();
+    public Fragment hashFragment = new Hash();
+    public Fragment writeFragment = new Write();
+    public Fragment alarmFragment = new Alarm();
+    public Fragment profileFragment = new Profile();
+    public Fragment storyFragment = new Story();
+
+
     Random random = new Random();
     ImageRoader imageRoader = new ImageRoader();
     ArrayList<String> arrayGroup = new ArrayList<>();
@@ -134,13 +139,14 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Tags>> call, Response<List<Tags>> response) {
 
                 List<Tags> responseBody = response.body();
+                Log.i("test1 Tags", responseBody.toString());
 
                 try {
                     for(int i = 0; responseBody.size() > i; i++){
                         arrayTest2.add(responseBody.get(i).getTagName());
                     }
                 } catch (Exception e) {
-                    Log.i("tagsFindAll Exception", e.toString());
+                    Log.i("test1 tagsFindAll Exception", e.toString());
                 }
 
             }
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Tags>> call, Throwable t) {
 
-                Log.i("tagsFindAll onFailure", t.toString());
+                Log.i("test1 tagsFindAll onFailure", t.toString());
 
             }
 
@@ -219,11 +225,10 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        Bundle listBundle = new Bundle();
+        Bundle listBundle = new Bundle(2);
         expandableListView.setOnChildClickListener((listView, view, groupPosition, childPosition, id) -> {
 
             switch (groupPosition) {
-
                 case 0:
                     switch (childPosition) {
                         case 0:
@@ -233,36 +238,26 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-
                 case 1:
-                    switch (childPosition) {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                            listBundle.putInt("groupPosition", groupPosition);
-                            listBundle.putInt("childPosition", childPosition);
-                            storyFragment.setArguments(listBundle);
-                            getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
-                            getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
-                            getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
-                            getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
-                            getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
-                            getSupportFragmentManager().beginTransaction().show(storyFragment).commit();
-                            drawer.closeDrawer(Gravity.LEFT);
-                            break;
-                    }
+                    getSupportFragmentManager().beginTransaction().detach(storyFragment).commit();
+                    listBundle.putInt("groupPosition", groupPosition);
+                    listBundle.putInt("childPosition", childPosition);
+                    storyFragment.setArguments(listBundle);
+                    getSupportFragmentManager().beginTransaction().attach(storyFragment).commit();
+                    getSupportFragmentManager().beginTransaction().hide(mainFragment).commit();
+                    getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+                    getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+                    getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+                    getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+                    getSupportFragmentManager().beginTransaction().show(storyFragment).commit();
+                    drawer.closeDrawer(Gravity.LEFT);
                     break;
-
                 case 2:
                     switch (childPosition) {
                         case 0:
                             break;
                     }
                     break;
-
                 case 3:
                     switch (childPosition) {
                         case 0:
@@ -273,11 +268,8 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-
             }
-
             return true;
-
         });
 
         Button footerLocation = findViewById(R.id.activity_main_id_content_footer_location);
@@ -350,6 +342,12 @@ public class MainActivity extends AppCompatActivity {
             ImageView backGroundImage_writeFragment = writeFragment.getView().findViewById(R.id.activity_main_write_id_image);
             backGroundImage_writeFragment.setImageBitmap(imageRoader.getBitmapImg(url));
 
+            EditText editText = writeFragment.getView().findViewById(R.id.activity_main_write_id_text);
+            editText.requestFocus();
+
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
         });
 
         Button footerAlarm = findViewById(R.id.activity_main_id_content_footer_alarm);
@@ -421,6 +419,9 @@ public class MainActivity extends AppCompatActivity {
             contentHeaderMore.setVisibility(View.INVISIBLE);
             contentHeaderTitle.setText("AROUND");
 
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         });
 
         TextView writeHeaderSave = findViewById(R.id.activity_main_id_write_header_save);
@@ -482,9 +483,22 @@ public class MainActivity extends AppCompatActivity {
             contentHeaderMore.setVisibility(View.INVISIBLE);
             contentHeaderTitle.setText("AROUND");
 
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+            editText.setText("");
+
         });
 
         contentHeaderMenu.setOnClickListener(view -> drawer.openDrawer(Gravity.LEFT));
+
+        Button writeFooterShop = findViewById(R.id.activity_main_id_write_footer_shop);
+        writeFooterShop.setOnClickListener(view -> {
+
+            EditText editText = writeFragment.getView().findViewById(R.id.activity_main_write_id_text);
+            editText.append("#");
+
+        });
 
     }
 
@@ -525,6 +539,16 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    public void changeFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_id_mainFragment, mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(hashFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(writeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(alarmFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(profileFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(storyFragment).commit();
     }
 
 }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "265046045582",
+    "firebase_url": "https://samplsepush.firebaseio.com",
+    "project_id": "samplsepush",
+    "storage_bucket": "samplsepush.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265046045582:android:39c7b01ad53fbea1",
+        "android_client_info": {
+          "package_name": "com.iot.samplepush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "265046045582-a4a5ip1novg2l86go2528cv2jnkef653.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3sKspEMapzMKJp6ksvnfr4dhpwAtZl5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "265046045582-a4a5ip1novg2l86go2528cv2jnkef653.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

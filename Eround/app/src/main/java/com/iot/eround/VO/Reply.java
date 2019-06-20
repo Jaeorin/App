@@ -29,6 +29,8 @@ public class Reply {
         this.heart = heart;
     }
 
+    public Reply(){}
+
     public int getReplyNum() {
         return replyNum;
     }

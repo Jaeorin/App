@@ -9,11 +9,11 @@ public class Tags {
 
     @SerializedName("tagNum")@Expose private int tagNum;
     @SerializedName("tagName")@Expose private String tagName;
-    @SerializedName("insertTag")@Expose private List<String> insertTag;
+    @SerializedName("insertTag")@Expose private List<InsertTag> insertTag;
     @SerializedName("tagCreateDate")@Expose private String tagCreateDate;
     @SerializedName("tagUpdateDate")@Expose private String tagUpdateDate;
 
-    public Tags(int tagNum, String tagName, List<String> insertTag, String tagCreateDate, String tagUpdateDate) {
+    public Tags(int tagNum, String tagName, List<InsertTag> insertTag, String tagCreateDate, String tagUpdateDate) {
         this.tagNum = tagNum;
         this.tagName = tagName;
         this.insertTag = insertTag;
@@ -37,11 +37,11 @@ public class Tags {
         this.tagName = tagName;
     }
 
-    public List<String> getInsertTag() {
+    public List<InsertTag> getInsertTag() {
         return insertTag;
     }
 
-    public void setInsertTag(List<String> insertTag) {
+    public void setInsertTag(List<InsertTag> insertTag) {
         this.insertTag = insertTag;
     }
 
